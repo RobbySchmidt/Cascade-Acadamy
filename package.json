@@ -1,0 +1,32 @@
+{
+  "name": "a",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "cross-env NODE_OPTIONS=--use-system-ca nuxt build",
+    "dev": "cross-env NODE_OPTIONS=--use-system-ca nuxt dev",
+    "generate": "cross-env NODE_OPTIONS=--use-system-ca nuxt generate",
+    "preview": "cross-env NODE_OPTIONS=--use-system-ca nuxt preview",
+    "postinstall": "nuxt prepare",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@codemirror/lang-css": "^6.3.1",
+    "@codemirror/state": "^6.6.0",
+    "@codemirror/theme-one-dark": "^6.1.3",
+    "@codemirror/view": "^6.43.1",
+    "@tailwindcss/vite": "^4.3.1",
+    "codemirror": "^6.0.2",
+    "nuxt": "^4.4.8",
+    "tailwindcss": "^4.3.1",
+    "vue": "^3.5.35",
+    "vue-router": "^5.1.0"
+  },
+  "devDependencies": {
+    "@vue/test-utils": "^2.4.11",
+    "cross-env": "^10.1.0",
+    "happy-dom": "^20.10.5",
+    "vitest": "^4.1.9"
+  }
+}

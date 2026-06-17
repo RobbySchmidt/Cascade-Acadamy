@@ -1,0 +1,220 @@
+[
+  {
+    "chapter": "Selektoren & Grundlagen",
+    "sort": 1,
+    "title": "Was ist ein Selektor?",
+    "type": "lesen",
+    "task": "Ein Selektor sagt dem Browser, WELCHE HTML-Elemente gestaltet werden sollen. Schreibst du `h1 { color: red; }`, dann ist `h1` der Selektor und alles in den geschweiften Klammern die Gestaltung. So verbindest du CSS-Regeln mit deinem HTML.",
+    "html": "<h1>Hallo CSS</h1>",
+    "css_starter": "",
+    "assertions": [],
+    "hint": "",
+    "solution": ""
+  },
+  {
+    "chapter": "Selektoren & Grundlagen",
+    "sort": 2,
+    "title": "Element-Selektoren",
+    "type": "uebung",
+    "task": "Ein Element-Selektor wählt alle Elemente eines Typs aus. Färbe alle `p`-Elemente mit der Farbe `blue`.",
+    "html": "<p>Dieser Absatz soll blau werden.</p>",
+    "css_starter": "p {\n  \n}",
+    "assertions": [
+      { "selector": "p", "prop": "color", "expected": "blue" }
+    ],
+    "hint": "Schreibe `color: blue;` zwischen die geschweiften Klammern des `p`-Selektors.",
+    "solution": "p {\n  color: blue;\n}"
+  },
+  {
+    "chapter": "Selektoren & Grundlagen",
+    "sort": 3,
+    "title": "Klassen & IDs",
+    "type": "uebung",
+    "task": "Mit einem Punkt sprichst du eine Klasse an: `.box`. Gib dem Element mit der Klasse `box` die Hintergrundfarbe `teal` (Eigenschaft `background-color`).",
+    "html": "<div class=\"box\">Eine Box</div>",
+    "css_starter": ".box {\n  \n}",
+    "assertions": [
+      { "selector": ".box", "prop": "background-color", "expected": "teal" }
+    ],
+    "hint": "Verwende den Klassen-Selektor `.box` und setze `background-color: teal;`.",
+    "solution": ".box {\n  background-color: teal;\n}"
+  },
+  {
+    "chapter": "Selektoren & Grundlagen",
+    "sort": 4,
+    "title": "Farben setzen",
+    "type": "uebung",
+    "task": "Du kannst Textfarbe und Hintergrundfarbe gleichzeitig setzen. Gib der `.box` die Textfarbe `blue` und die Hintergrundfarbe `teal`.",
+    "html": "<div class=\"box\">Farbige Box</div>",
+    "css_starter": ".box {\n  \n}",
+    "assertions": [
+      { "selector": ".box", "prop": "color", "expected": "blue" },
+      { "selector": ".box", "prop": "background-color", "expected": "teal" }
+    ],
+    "hint": "Setze sowohl `color: blue;` als auch `background-color: teal;` im `.box`-Block.",
+    "solution": ".box {\n  color: blue;\n  background-color: teal;\n}"
+  },
+  {
+    "chapter": "Text & Schrift",
+    "sort": 5,
+    "title": "Farbe & Textausrichtung",
+    "type": "uebung",
+    "task": "Gib der Überschrift die Farbe `teal` und zentriere den Text mit `text-align`.",
+    "html": "<h1>Willkommen</h1>\n<p>Ein Beispieltext.</p>",
+    "css_starter": "h1 {\n  \n}",
+    "assertions": [
+      { "selector": "h1", "prop": "color", "expected": "teal" },
+      { "selector": "h1", "prop": "text-align", "expected": "center" }
+    ],
+    "hint": "Du brauchst zwei Zeilen: `color: teal;` und `text-align: center;`.",
+    "solution": "h1 {\n  color: teal;\n  text-align: center;\n}"
+  },
+  {
+    "chapter": "Text & Schrift",
+    "sort": 6,
+    "title": "Schriftgröße & -dicke",
+    "type": "uebung",
+    "task": "Mit `font-size` änderst du die Größe und mit `font-weight` die Dicke der Schrift. Gib der `h1` eine `font-size` von `32px` und ein `font-weight` von `700`.",
+    "html": "<h1>Große, fette Überschrift</h1>",
+    "css_starter": "h1 {\n  \n}",
+    "assertions": [
+      { "selector": "h1", "prop": "font-size", "expected": "32px" },
+      { "selector": "h1", "prop": "font-weight", "expected": "700" }
+    ],
+    "hint": "Setze `font-size: 32px;` und `font-weight: 700;`.",
+    "solution": "h1 {\n  font-size: 32px;\n  font-weight: 700;\n}"
+  },
+  {
+    "chapter": "Text & Schrift",
+    "sort": 7,
+    "title": "Schriftart & Zeilenhöhe",
+    "type": "uebung",
+    "task": "Mit `font-family` wählst du die Schriftart und mit `line-height` den Abstand zwischen den Zeilen. Gib dem `p` die Schriftart `Arial` und eine `line-height` von `24px`.",
+    "html": "<p>Ein längerer Absatz, der über mehrere Zeilen läuft, damit man die Zeilenhöhe gut erkennen kann.</p>",
+    "css_starter": "p {\n  \n}",
+    "assertions": [
+      { "selector": "p", "prop": "line-height", "expected": "24px" },
+      { "selector": "p", "prop": "font-family", "expected": "Arial" }
+    ],
+    "hint": "Setze `font-family: Arial;` und `line-height: 24px;`.",
+    "solution": "p {\n  font-family: Arial;\n  line-height: 24px;\n}"
+  },
+  {
+    "chapter": "Text & Schrift",
+    "sort": 8,
+    "title": "Text dekorieren",
+    "type": "uebung",
+    "task": "Mit `text-transform` änderst du Groß-/Kleinschreibung und mit `text-decoration` fügst du z. B. eine Unterstreichung hinzu. Schreibe die `h1` in Großbuchstaben (`uppercase`) und unterstreiche sie (`underline`).",
+    "html": "<h1>dekorierte überschrift</h1>",
+    "css_starter": "h1 {\n  \n}",
+    "assertions": [
+      { "selector": "h1", "prop": "text-transform", "expected": "uppercase" },
+      { "selector": "h1", "prop": "text-decoration-line", "expected": "underline" }
+    ],
+    "hint": "Setze `text-transform: uppercase;` und `text-decoration: underline;`.",
+    "solution": "h1 {\n  text-transform: uppercase;\n  text-decoration: underline;\n}"
+  },
+  {
+    "chapter": "Box-Modell",
+    "sort": 9,
+    "title": "Innenabstand (padding)",
+    "type": "uebung",
+    "task": "`padding` ist der Innenabstand zwischen Rand und Inhalt einer Box. Gib der `.box` ein `padding` von `24px`.",
+    "html": "<div class=\"box\">Box mit Innenabstand</div>",
+    "css_starter": ".box {\n  \n}",
+    "assertions": [
+      { "selector": ".box", "prop": "padding-top", "expected": "24px" }
+    ],
+    "hint": "Setze `padding: 24px;` – das gilt für alle vier Seiten.",
+    "solution": ".box {\n  padding: 24px;\n}"
+  },
+  {
+    "chapter": "Box-Modell",
+    "sort": 10,
+    "title": "Außenabstand (margin)",
+    "type": "uebung",
+    "task": "`margin` ist der Außenabstand einer Box zu ihren Nachbarn. Gib der `.box` einen oberen Außenabstand von `16px` (`margin`).",
+    "html": "<div class=\"box\">Box mit Außenabstand</div>",
+    "css_starter": ".box {\n  \n}",
+    "assertions": [
+      { "selector": ".box", "prop": "margin-top", "expected": "16px" }
+    ],
+    "hint": "Setze `margin: 16px;` oder gezielt `margin-top: 16px;`.",
+    "solution": ".box {\n  margin: 16px;\n}"
+  },
+  {
+    "chapter": "Box-Modell",
+    "sort": 11,
+    "title": "Rahmen (border)",
+    "type": "uebung",
+    "task": "Mit `border` umrandest du eine Box. Gib der `.box` einen Rahmen mit `2px` Breite, durchgezogen (`solid`) und der Farbe `teal`.",
+    "html": "<div class=\"box\">Umrahmte Box</div>",
+    "css_starter": ".box {\n  \n}",
+    "assertions": [
+      { "selector": ".box", "prop": "border-style", "expected": "solid" },
+      { "selector": ".box", "prop": "border-width", "expected": "2px" }
+    ],
+    "hint": "Die Kurzschreibweise lautet `border: 2px solid teal;`.",
+    "solution": ".box {\n  border: 2px solid teal;\n}"
+  },
+  {
+    "chapter": "Box-Modell",
+    "sort": 12,
+    "title": "Ecken & Schatten",
+    "type": "uebung",
+    "task": "Mit `border-radius` rundest du die Ecken ab und mit `padding` schaffst du Platz im Inneren. Gib der `.box` einen `border-radius` von `12px` und ein `padding` von `16px`.",
+    "html": "<div class=\"box\">Abgerundete Box</div>",
+    "css_starter": ".box {\n  \n}",
+    "assertions": [
+      { "selector": ".box", "prop": "border-radius", "expected": "12px" },
+      { "selector": ".box", "prop": "padding-top", "expected": "16px" }
+    ],
+    "hint": "Setze `border-radius: 12px;` und `padding: 16px;`.",
+    "solution": ".box {\n  border-radius: 12px;\n  padding: 16px;\n}"
+  },
+  {
+    "chapter": "Hintergrund & Abschluss",
+    "sort": 13,
+    "title": "Hintergrund & Verlauf",
+    "type": "uebung",
+    "task": "Mit `background-color` gibst du einer Box eine Hintergrundfarbe. Gib der `.box` die Hintergrundfarbe `teal`.",
+    "html": "<div class=\"box\">Box mit Hintergrund</div>",
+    "css_starter": ".box {\n  \n}",
+    "assertions": [
+      { "selector": ".box", "prop": "background-color", "expected": "teal" }
+    ],
+    "hint": "Setze `background-color: teal;`.",
+    "solution": ".box {\n  background-color: teal;\n}"
+  },
+  {
+    "chapter": "Hintergrund & Abschluss",
+    "sort": 14,
+    "title": "Größe & Anzeige",
+    "type": "uebung",
+    "task": "Mit `width` bestimmst du die Breite und mit `display` das Anzeigeverhalten. Gib der `.box` eine `width` von `200px` und setze `display` auf `flex`.",
+    "html": "<div class=\"box\">Flexible Box</div>",
+    "css_starter": ".box {\n  \n}",
+    "assertions": [
+      { "selector": ".box", "prop": "width", "expected": "200px" },
+      { "selector": ".box", "prop": "display", "expected": "flex" }
+    ],
+    "hint": "Setze `width: 200px;` und `display: flex;`.",
+    "solution": ".box {\n  width: 200px;\n  display: flex;\n}"
+  },
+  {
+    "chapter": "Hintergrund & Abschluss",
+    "sort": 15,
+    "title": "Mini-Projekt: Karte stylen",
+    "type": "uebung",
+    "task": "Zeit, alles zu kombinieren! Style die `.card` zu einer schönen Karte: `padding` von `20px`, abgerundete Ecken mit `border-radius` von `12px` und die Hintergrundfarbe `teal`.",
+    "html": "<div class=\"card\">\n  <h2>Meine Karte</h2>\n  <p>Ein kleiner Beschreibungstext.</p>\n</div>",
+    "css_starter": ".card {\n  \n}",
+    "assertions": [
+      { "selector": ".card", "prop": "padding-top", "expected": "20px" },
+      { "selector": ".card", "prop": "border-radius", "expected": "12px" },
+      { "selector": ".card", "prop": "background-color", "expected": "teal" }
+    ],
+    "hint": "Kombiniere `padding: 20px;`, `border-radius: 12px;` und `background-color: teal;`.",
+    "solution": ".card {\n  padding: 20px;\n  border-radius: 12px;\n  background-color: teal;\n}"
+  }
+]

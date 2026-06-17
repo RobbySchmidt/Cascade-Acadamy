@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&family=Patrick+Hand&family=Pathway+Gothic+One&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body { background: #e9e7e1; font-family: 'Patrick Hand', cursive; }
+  ::-webkit-scrollbar { height: 12px; width: 12px; }
+  ::-webkit-scrollbar-thumb { background: #c9c6bd; border-radius: 6px; }
+</style>
+</helmet>
+
+<div style="min-height:100vh;padding:32px 40px 80px;background:#e9e7e1;">
+
+  <!-- ===== Page header ===== -->
+  <div style="max-width:1240px;margin:0 auto 22px;display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap;">
+    <div>
+      <div style="font-family:'Kalam',cursive;font-weight:700;font-size:30px;color:#2a2a2a;line-height:1;">CSS-Lernplattform &mdash; Low-Fi Wireframes</div>
+      <div style="font-family:'Patrick Hand',cursive;font-size:17px;color:#6b6863;margin-top:6px;">Struktur &amp; Hierarchie, noch keine Farben/Typo. Fluss: Übersicht → Detail → Lektion → nächste Lektion.</div>
+    </div>
+    <div style="font-family:'Kalam',cursive;font-size:14px;color:#c2410c;border:2px dashed #d6a06b;border-radius:8px;padding:6px 12px;transform:rotate(-1.5deg);">Klick die Reiter ↑ zum Wechseln</div>
+  </div>
+
+  <!-- ===== Tab bar ===== -->
+  <div style="max-width:1240px;margin:0 auto 18px;display:flex;gap:10px;flex-wrap:wrap;border-bottom:2px solid #cdcabf;padding-bottom:0;">
+    <div onClick="{{ goOverview }}" style="position:relative;cursor:pointer;font-family:'Patrick Hand',cursive;font-size:19px;color:#2a2a2a;padding:9px 18px 12px;">Kursübersicht<sc-if value="{{ isOverview }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;left:12px;right:12px;bottom:-2px;height:4px;background:#5b8def;border-radius:2px;"></div></sc-if></div>
+    <div onClick="{{ goDetail }}" style="position:relative;cursor:pointer;font-family:'Patrick Hand',cursive;font-size:19px;color:#2a2a2a;padding:9px 18px 12px;">Kursdetail<sc-if value="{{ isDetail }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;left:12px;right:12px;bottom:-2px;height:4px;background:#5b8def;border-radius:2px;"></div></sc-if></div>
+    <div onClick="{{ goEditor }}" style="position:relative;cursor:pointer;font-family:'Patrick Hand',cursive;font-size:19px;color:#2a2a2a;padding:9px 18px 12px;font-weight:700;">Lektion (Editor) ★<sc-if value="{{ isEditor }}" hint-placeholder-val="{{ true }}"><div style="position:absolute;left:12px;right:12px;bottom:-2px;height:4px;background:#5b8def;border-radius:2px;"></div></sc-if></div>
+    <div onClick="{{ goProfile }}" style="position:relative;cursor:pointer;font-family:'Patrick Hand',cursive;font-size:19px;color:#2a2a2a;padding:9px 18px 12px;">Profil<sc-if value="{{ isProfile }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;left:12px;right:12px;bottom:-2px;height:4px;background:#5b8def;border-radius:2px;"></div></sc-if></div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- SCREEN 1: KURSÜBERSICHT -->
+  <!-- ============================================================ -->
+  <sc-if value="{{ isOverview }}" hint-placeholder-val="{{ false }}">
+  <div style="max-width:1180px;margin:0 auto;">
+    <div style="background:#fff;border:2px solid #2a2a2a;border-radius:10px;box-shadow:4px 4px 0 rgba(42,42,42,0.12);overflow:hidden;">
+      <!-- browser chrome -->
+      <div style="display:flex;align-items:center;gap:8px;padding:11px 16px;border-bottom:2px solid #2a2a2a;background:#f3f1ec;">
+        <div style="width:11px;height:11px;border:2px solid #2a2a2a;border-radius:50%;"></div>
+        <div style="width:11px;height:11px;border:2px solid #2a2a2a;border-radius:50%;"></div>
+        <div style="width:11px;height:11px;border:2px solid #2a2a2a;border-radius:50%;"></div>
+        <div style="flex:1;height:22px;border:2px solid #cfccc4;border-radius:11px;background:#fff;margin-left:10px;"></div>
+      </div>
+      <!-- top nav -->
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 26px;border-bottom:2px dashed #d8d5cc;">
+        <div style="font-family:'Kalam',cursive;font-weight:700;font-size:21px;color:#2a2a2a;">&lt;/&gt; LernCSS</div>
+        <div style="display:flex;align-items:center;gap:22px;font-family:'Patrick Hand',cursive;font-size:17px;color:#2a2a2a;">
+          <div style="border-bottom:3px solid #5b8def;padding-bottom:2px;">Übersicht</div>
+          <div style="color:#8a877f;">Profil</div>
+          <div style="border:2px solid #2a2a2a;border-radius:8px;padding:5px 14px;box-shadow:2px 2px 0 #2a2a2a;">Login</div>
+        </div>
+      </div>
+      <!-- body -->
+      <div style="padding:30px 34px 40px;">
+        <div style="font-family:'Kalam',cursive;font-weight:700;font-size:26px;color:#2a2a2a;">Kurse</div>
+        <div style="height:9px;width:340px;background:#dcdad3;border-radius:4px;margin:12px 0 4px;"></div>
+        <div style="height:9px;width:260px;background:#e6e4dd;border-radius:4px;margin-bottom:26px;"></div>
+
+        <!-- card grid -->
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;">
+          <!-- active card -->
+          <div style="border:2px solid #2a2a2a;border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:12px;box-shadow:3px 3px 0 rgba(42,42,42,0.1);">
+            <div style="height:88px;border:2px solid #cfccc4;border-radius:8px;background:repeating-linear-gradient(45deg,#f0eee8,#f0eee8 7px,#e6e4dc 7px,#e6e4dc 14px);display:flex;align-items:center;justify-content:center;font-family:'Patrick Hand',cursive;font-size:13px;color:#9a978e;">cover</div>
+            <div style="font-family:'Kalam',cursive;font-weight:700;font-size:20px;color:#2a2a2a;">CSS-Grundlagen</div>
+            <div style="display:flex;gap:8px;font-family:'Patrick Hand',cursive;font-size:14px;color:#6b6863;">
+              <span style="border:2px solid #cfccc4;border-radius:20px;padding:1px 10px;">Anfänger</span>
+              <span style="border:2px solid #cfccc4;border-radius:20px;padding:1px 10px;">25 Lektionen</span>
+            </div>
+            <div>
+              <div style="height:13px;border:2px solid #2a2a2a;border-radius:8px;background:#fff;overflow:hidden;"><div style="width:32%;height:100%;background:#5b8def;"></div></div>
+              <div style="font-family:'Patrick Hand',cursive;font-size:14px;color:#6b6863;margin-top:5px;">32% · 8 / 25</div>
+            </div>
+            <div style="margin-top:auto;font-family:'Patrick Hand',cursive;font-size:17px;color:#fff;background:#5b8def;border:2px solid #2a2a2a;border-radius:8px;text-align:center;padding:8px;box-shadow:2px 2px 0 #2a2a2a;">Weiterlernen →</div>
+          </div>
+          <!-- locked card -->
+          <div style="border:2px solid #cfccc4;border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:12px;opacity:0.65;">
+            <div style="height:88px;border:2px solid #d8d5cc;border-radius:8px;background:repeating-linear-gradient(45deg,#f4f3ee,#f4f3ee 7px,#ece9e2 7px,#ece9e2 14px);"></div>
+            <div style="font-family:'Kalam',cursive;font-weight:700;font-size:20px;color:#6b6863;">Flexbox &amp; Layout</div>
+            <div style="display:flex;gap:8px;font-family:'Patrick Hand',cursive;font-size:14px;color:#9a978e;"><span style="border:2px solid #d8d5cc;border-radius:20px;padding:1px 10px;">Demnächst</span></div>
+            <div style="font-family:'Patrick Hand',cursive;font-size:14px;color:#9a978e;margin-top:auto;">Bald verfügbar</div>
+          </div>
+          <!-- locked card -->
+          <div style="border:2px solid #cfccc4;border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:12px;opacity:0.65;">
+            <div style="height:88px;border:2px solid #d8d5cc;border-radius:8px;background:repeating-linear-gradient(45deg,#f4f3ee,#f4f3ee 7px,#ece9e2 7px,#ece9e2 14px);"></div>
+            <div style="font-family:'Kalam',cursive;font-weight:700;font-size:20px;color:#6b6863;">Animationen</div>
+            <div style="display:flex;gap:8px;font-family:'Patrick Hand',cursive;font-size:14px;color:#9a978e;"><span style="border:2px solid #d8d5cc;border-radius:20px;padding:1px 10px;">Demnächst</span></div>
+            <div style="font-family:'Patrick Hand',cursive;font-size:14px;color:#9a978e;margin-top:auto;">Bald verfügbar</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="font-family:'Kalam',cursive;font-size:16px;color:#c2410c;margin-top:14px;transform:rotate(-0.6deg);">↑ „Kurskarte" — wiederverwendbares Modul (Titel · Schwierigkeit · Fortschritt · Lektionszahl). Klick auf eine Karte → Kursdetail.</div>
+  </div>
+  </sc-if>
+
+  <!-- ============================================================ -->
+  <!-- SCREEN 2: KURSDETAIL -->
+  <!-- ============================================================ -->
+  <sc-if value="{{ isDetail }}" hint-placeholder-val="{{ false }}">
+  <div style="max-width:1000px;margin:0 auto;">
+    <div style="background:#fff;border:2px solid #2a2a2a;border-radius:10px;box-shadow:4px 4px 0 rgba(42,42,42,0.12);overflow:hidden;">
+      <div style="display:flex;align-items:center;gap:8px;padding:11px 16px;border-bottom:2px solid #2a2a2a;background:#f3f1ec;">
+        <div style="width:11px;height:11px;border:2px solid #2a2a2a;border-radius:50%;"></div>
+        <div style="width:11px;height:11px;border:2px solid #2a2a2a;border-radius:50%;"></div>
+        <div style="width:11px;height:11px;border:2px solid #2a2a2a;border-radius:50%;"></div>
+        <div style="flex:1;height:22px;border:2px solid #cfccc4;border-radius:11px;background:#fff;margin-left:10px;"></div>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 26px;border-bottom:2px dashed #d8d5cc;">
+        <div style="font-family:'Kalam',cursive;font-weight:700;font-size:21px;color:#2a2a2a;">&lt;/&gt; LernCSS</div>
+        <div style="display:flex;align-items:center;gap:22px;font-family:'Patrick Hand',cursive;font-size:17px;color:#8a877f;"><div>Übersicht</div><div>Profil</div><div style="border:2px solid #2a2a2a;border-radius:8px;padding:5px 14px;box-shadow:2px 2px 0 #2a2a2a;color:#2a2a2a;">Login</div></div>
+      </div>
+
+      <div style="padding:24px 34px 38px;">
+        <div style="font-family:'Patrick Hand',cursive;font-size:15px;color:#6b6863;margin-bottom:10px;">← Zurück zur Übersicht</div>
+        <!-- course header -->
+        <div style="border:2px solid #2a2a2a;border-radius:10px;padding:20px 22px;display:flex;gap:22px;align-items:center;box-shadow:3px 3px 0 rgba(42,42,42,0.08);">
+          <div style="width:96px;height:96px;flex:none;border:2px solid #cfccc4;border-radius:8px;background:repeating-linear-gradient(45deg,#f0eee8,#f0eee8 7px,#e6e4dc 7px,#e6e4dc 14px);"></div>
+          <div style="flex:1;">
+            <div style="font-family:'Kalam',cursive;font-weight:700;font-size:26px;color:#2a2a2a;">CSS-Grundlagen</div>
+            <div style="height:9px;width:90%;background:#dcdad3;border-radius:4px;margin:12px 0 6px;"></div>
+            <div style="height:9px;width:65%;background:#e6e4dd;border-radius:4px;margin-bottom:14px;"></div>
+            <div style="display:flex;align-items:center;gap:14px;">
+              <div style="flex:1;height:14px;border:2px solid #2a2a2a;border-radius:8px;background:#fff;overflow:hidden;"><div style="width:32%;height:100%;background:#5b8def;"></div></div>
+              <div style="font-family:'Patrick Hand',cursive;font-size:16px;color:#2a2a2a;white-space:nowrap;">32% · 8 / 25 Lektionen</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- chapter 1 -->
+        <div style="margin-top:26px;">
+          <div style="font-family:'Kalam',cursive;font-weight:700;font-size:19px;color:#2a2a2a;margin-bottom:10px;">Kapitel 1 · Selektoren &amp; Box-Modell</div>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <!-- done row -->
+            <div style="display:flex;align-items:center;gap:14px;border:2px solid #cfccc4;border-radius:8px;padding:11px 16px;">
+              <div style="width:24px;height:24px;flex:none;border-radius:50%;background:#6FB76F;border:2px solid #2a2a2a;color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Kalam',cursive;font-weight:700;">✓</div>
+              <div style="flex:1;font-family:'Patrick Hand',cursive;font-size:18px;color:#2a2a2a;">Was ist ein Selektor?</div>
+              <div style="font-family:'Patrick Hand',cursive;font-size:14px;color:#8a877f;border:2px solid #cfccc4;border-radius:20px;padding:1px 10px;">Lesen</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:14px;border:2px solid #cfccc4;border-radius:8px;padding:11px 16px;">
+              <div style="width:24px;height:24px;flex:none;border-radius:50%;background:#6FB76F;border:2px solid #2a2a2a;color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Kalam',cursive;font-weight:700;">✓</div>
+              <div style="flex:1;font-family:'Patrick Hand',cursive;font-size:18px;color:#2a2a2a;">Klassen &amp; IDs</div>
+              <div style="font-family:'Patrick Hand',cursive;font-size:14px;color:#8a877f;border:2px solid #cfccc4;border-radius:20px;padding:1px 10px;">Übung</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- chapter 2 -->
+        <div style="margin-top:22px;">
+          <div style="font-family:'Kalam',cursive;font-weight:700;font-size:19px;color:#2a2a2a;margin-bottom:10px;">Kapitel 2 · Farben &amp; Text</div>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <div style="display:flex;align-items:center;gap:14px;border:2px solid #cfccc4;border-radius:8px;padding:11px 16px;">
+              <div style="width:24px;height:24px;flex:none;border-radius:50%;background:#6FB76F;border:2px solid #2a2a2a;color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Kalam',cursive;font-weight:700;">✓</div>
+              <div style="flex:1;font-family:'Patrick Hand',cursive;font-size:18px;color:#2a2a2a;">Farben in CSS</div>
+              <div style="font-family:'Patrick Hand',cursive;font-size:14px;color:#8a877f;border:2px solid #cfccc4;border-radius:20px;padding:1px 10px;">Übung</div>
+            </div>
+            <!-- current / active row -->
+            <div onClick="{{ goEditor }}" style="cursor:pointer;display:flex;align-items:center;gap:14px;border:2px solid #5b8def;border-radius:8px;padding:13px 16px;background:#eef4fe;box-shadow:3px 3px 0 rgba(91,141,239,0.25);">
+              <div style="width:24px;height:24px;flex:none;border-radius:50%;background:#fff;border:2px solid #5b8def;display:flex;align-items:center;justify-content:center;font-family:'Kalam',cursive;color:#5b8def;font-size:13px;">▶</div>
+              <div style="flex:1;">
+                <div style="font-family:'Kalam',cursive;font-weight:700;font-size:18px;color:#2a2a2a;">Farben &amp; Textausrichtung</div>
+                <div style="font-family:'Patrick Hand',cursive;font-size:14px;color:#5b8def;">Hier geht's weiter</div>
+              </div>
+              <div style="font-family:'Patrick Hand',cursive;font-size:16px;color:#fff;background:#5b8def;border:2px solid #2a2a2a;border-radius:8px;padding:7px 16px;box-shadow:2px 2px 0 #2a2a2a;">Lektion starten →</div>
+            </div>
+            <!-- locked rows -->
+            <div style="display:flex;align-items:center;gap:14px;border:2px solid #e0ddd4;border-radius:8px;padding:11px 16px;opacity:0.6;">
+              <div style="width:24px;height:24px;flex:none;border-radius:50%;background:#e0ddd4;border:2px solid #cfccc4;display:flex;align-items:center;justify-content:center;font-family:'Patrick Hand',cursive;color:#8a877f;font-size:13px;">🔒</div>
+              <div style="flex:1;font-family:'Patrick Hand',cursive;font-size:18px;color:#8a877f;">Schriftarten &amp; Größen</div>
+              <div style="font-family:'Patrick Hand',cursive;font-size:14px;color:#9a978e;border:2px solid #e0ddd4;border-radius:20px;padding:1px 10px;">gesperrt</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:14px;border:2px solid #e0ddd4;border-radius:8px;padding:11px 16px;opacity:0.6;">
+              <div style="width:24px;height:24px;flex:none;border-radius:50%;background:#e0ddd4;border:2px solid #cfccc4;display:flex;align-items:center;justify-content:center;font-family:'Patrick Hand',cursive;color:#8a877f;font-size:13px;">🔒</div>
+              <div style="flex:1;font-family:'Patrick Hand',cursive;font-size:18px;color:#8a877f;">Abstände &amp; Ausrichtung</div>
+              <div style="font-family:'Patrick Hand',cursive;font-size:14px;color:#9a978e;border:2px solid #e0ddd4;border-radius:20px;padding:1px 10px;">gesperrt</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="font-family:'Kalam',cursive;font-size:16px;color:#c2410c;margin-top:14px;transform:rotate(-0.5deg);">↑ „Lektions-Listeneintrag" — Statussymbol (erledigt / aktuell / gesperrt) · Titel · Typ. Aktuelle Lektion ist hervorgehoben.</div>
+  </div>
+  </sc-if>
+
+  <!-- ============================================================ -->
+  <!-- SCREEN 3: LEKTION (EDITOR) — FOKUS -->
+  <!-- ============================================================ -->
+  <sc-if value="{{ isEditor }}" hint-placeholder-val="{{ true }}">
+  <div style="max-width:1240px;margin:0 auto;">
+
+    <!-- variant toggle -->
+    <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px;">
+      <span style="font-family:'Kalam',cursive;font-weight:700;font-size:17px;color:#2a2a2a;">Layout-Variante:</span>
+      <div onClick="{{ setVarB }}" style="position:relative;cursor:pointer;font-family:'Patrick Hand',cursive;font-size:16px;border:2px solid #2a2a2a;border-radius:8px;padding:7px 16px;background:#fff;box-shadow:2px 2px 0 #2a2a2a;">B · 3-spaltig <span style="color:#8a877f;">(empfohlen)</span><sc-if value="{{ isVarB }}" hint-placeholder-val="{{ true }}"><div style="position:absolute;inset:-2px;border:3px solid #5b8def;border-radius:9px;pointer-events:none;"></div></sc-if></div>
+      <div onClick="{{ setVarA }}" style="position:relative;cursor:pointer;font-family:'Patrick Hand',cursive;font-size:16px;border:2px solid #2a2a2a;border-radius:8px;padding:7px 16px;background:#fff;box-shadow:2px 2px 0 #2a2a2a;">A · 2-spaltig (Aufgabe oben)<sc-if value="{{ isVarA }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;inset:-2px;border:3px solid #5b8def;border-radius:9px;pointer-events:none;"></div></sc-if></div>
+      <div onClick="{{ setVarC }}" style="position:relative;cursor:pointer;font-family:'Patrick Hand',cursive;font-size:16px;border:2px solid #2a2a2a;border-radius:8px;padding:7px 16px;background:#fff;box-shadow:2px 2px 0 #2a2a2a;">C · gestapelt (schmal / mobil)<sc-if value="{{ isVarC }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;inset:-2px;border:3px solid #5b8def;border-radius:9px;pointer-events:none;"></div></sc-if></div>
+    </div>
+
+    <!-- ===================== VARIANT B: 3-column ===================== -->
+    <sc-if value="{{ isVarB }}" hint-placeholder-val="{{ true }}">
+    <div style="background:#fff;border:2px solid #2a2a2a;border-radius:10px;box-shadow:4px 4px 0 rgba(42,42,42,0.12);overflow:hidden;">
+      <!-- lesson top bar -->
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:13px 22px;border-bottom:2px solid #2a2a2a;background:#f3f1ec;">
+        <div>
+          <div style="font-family:'Patrick Hand',cursive;font-size:14px;color:#8a877f;">CSS-Grundlagen › Farben &amp; Text</div>
+          <div style="font-family:'Kalam',cursive;font-weight:700;font-size:20px;color:#2a2a2a;">Farben &amp; Textausrichtung</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:14px;">
+          <div style="font-family:'Patrick Hand',cursive;font-size:15px;color:#6b6863;">Lektion 12 / 25</div>
+          <div style="width:120px;height:11px;border:2px solid #2a2a2a;border-radius:8px;background:#fff;overflow:hidden;"><div style="width:48%;height:100%;background:#5b8def;"></div></div>
+          <div style="width:26px;height:26px;border:2px solid #2a2a2a;border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:'Patrick Hand',cursive;">✕</div>
+        </div>
+      </div>
+
+      <!-- 3 columns -->
+      <div style="display:flex;align-items:stretch;min-height:430px;">
+        <!-- col 1: Aufgabe -->
+        <div style="width:27%;padding:20px;border-right:2px dashed #d8d5cc;display:flex;flex-direction:column;gap:12px;">
+          <div style="font-family:'Pathway Gothic One',sans-serif;letter-spacing:1px;font-size:15px;color:#8a877f;">AUFGABE</div>
+          <div style="font-family:'Patrick Hand',cursive;font-size:18px;color:#2a2a2a;line-height:1.4;">Gib der Überschrift die Farbe <b>teal</b> und zentriere den Text.</div>
+          <div style="height:9px;width:90%;background:#e6e4dd;border-radius:4px;"></div>
+          <div style="height:9px;width:70%;background:#e6e4dd;border-radius:4px;"></div>
+          <div style="margin-top:8px;border:2px solid #cfccc4;border-radius:8px;padding:10px 12px;font-family:'Patrick Hand',cursive;font-size:15px;color:#6b6863;display:flex;align-items:center;justify-content:space-between;cursor:pointer;">Hinweis anzeigen <span>▸</span></div>
+        </div>
+
+        <!-- col 2: Editor -->
+        <div style="width:40%;padding:20px;border-right:2px dashed #d8d5cc;display:flex;flex-direction:column;gap:14px;">
+          <div>
+            <div style="font-family:'Pathway Gothic One',sans-serif;letter-spacing:1px;font-size:14px;color:#8a877f;margin-bottom:6px;">HTML — vorgegeben, nicht editierbar</div>
+            <div style="border:2px solid #cfccc4;border-radius:8px;background:#f4f3ee;padding:10px 12px;font-family:ui-monospace,monospace;font-size:13px;color:#9a978e;line-height:1.6;">&lt;h1&gt;Willkommen&lt;/h1&gt;<br>&lt;p&gt;Ein Beispieltext.&lt;/p&gt;</div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;">
+            <div style="font-family:'Pathway Gothic One',sans-serif;letter-spacing:1px;font-size:14px;color:#2a2a2a;margin-bottom:6px;">CSS — dein Code</div>
+            <div style="flex:1;border:2px solid #2a2a2a;border-radius:8px;background:#fbfbf9;display:flex;overflow:hidden;box-shadow:inset 0 0 0 1px #eee;">
+              <div style="width:34px;background:#f0eee8;border-right:2px solid #e0ddd4;font-family:ui-monospace,monospace;font-size:13px;color:#b5b2a8;text-align:right;padding:11px 7px;line-height:1.7;">1<br>2<br>3<br>4</div>
+              <div style="flex:1;padding:11px 13px;font-family:ui-monospace,monospace;font-size:14px;color:#2a2a2a;line-height:1.7;">h1 {<br>&nbsp;&nbsp;<span style="color:#5b8def;">color</span>: teal;<br>&nbsp;&nbsp;<span style="color:#5b8def;">text-align</span>: center;<br>}</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- col 3: Vorschau + Feedback -->
+        <div style="width:33%;padding:20px;display:flex;flex-direction:column;gap:14px;">
+          <div>
+            <div style="font-family:'Pathway Gothic One',sans-serif;letter-spacing:1px;font-size:14px;color:#8a877f;margin-bottom:6px;">LIVE-VORSCHAU (iframe)</div>
+            <div style="border:2px solid #cfccc4;border-radius:8px;background:#fff;padding:20px 14px;text-align:center;">
+              <div style="font-family:'Kalam',cursive;font-weight:700;font-size:22px;color:#2a2a2a;">Willkommen</div>
+              <div style="height:8px;width:80%;background:#e6e4dd;border-radius:4px;margin:12px auto 0;"></div>
+            </div>
+          </div>
+          <div style="border:2px solid #2a2a2a;border-radius:8px;padding:14px;background:#fafaf6;">
+            <div style="font-family:'Pathway Gothic One',sans-serif;letter-spacing:1px;font-size:14px;color:#2a2a2a;margin-bottom:10px;">PRÜFUNG</div>
+            <div style="display:flex;align-items:center;gap:9px;font-family:ui-monospace,monospace;font-size:13px;color:#2a2a2a;margin-bottom:7px;"><span style="width:18px;height:18px;border-radius:50%;background:#6FB76F;border:2px solid #2a2a2a;color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-family:'Kalam',cursive;">✓</span> h1 → color: teal</div>
+            <div style="display:flex;align-items:center;gap:9px;font-family:ui-monospace,monospace;font-size:13px;color:#6b6863;margin-bottom:12px;"><span style="width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #cfccc4;display:block;"></span> h1 → text-align: center</div>
+            <div style="font-family:'Patrick Hand',cursive;font-size:16px;color:#fff;background:#5b8def;border:2px solid #2a2a2a;border-radius:8px;text-align:center;padding:8px;box-shadow:2px 2px 0 #2a2a2a;">Prüfen</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- footer nav -->
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 22px;border-top:2px solid #2a2a2a;background:#f3f1ec;">
+        <div style="font-family:'Patrick Hand',cursive;font-size:16px;color:#2a2a2a;border:2px solid #2a2a2a;border-radius:8px;padding:7px 16px;background:#fff;box-shadow:2px 2px 0 #2a2a2a;">← Zurück</div>
+        <div style="display:flex;gap:12px;">
+          <div style="font-family:'Patrick Hand',cursive;font-size:16px;color:#6b6863;border:2px solid #cfccc4;border-radius:8px;padding:7px 16px;">Lösung anzeigen</div>
+          <div style="font-family:'Patrick Hand',cursive;font-size:16px;color:#fff;background:#5b8def;border:2px solid #2a2a2a;border-radius:8px;padding:7px 18px;box-shadow:2px 2px 0 #2a2a2a;">Weiter →</div>
+        </div>
+      </div>
+    </div>
+    <div style="font-family:'Kalam',cursive;font-size:16px;color:#c2410c;margin-top:14px;transform:rotate(-0.4deg);">★ Empfohlen: Aufgabe · Editor · Vorschau+Prüfung klar getrennt. Prüfung liest <b>getComputedStyle</b> aus dem iframe und vergleicht mit Sollwerten.</div>
+    </sc-if>
+
+    <!-- ===================== VARIANT A: 2-column, task on top ===================== -->
+    <sc-if value="{{ isVarA }}" hint-placeholder-val="{{ false }}">
+    <div style="background:#fff;border:2px solid #2a2a2a;border-radius:10px;box-shadow:4px 4px 0 rgba(42,42,42,0.12);overflow:hidden;">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:13px 22px;border-bottom:2px solid #2a2a2a;background:#f3f1ec;">
+        <div>
+          <div style="font-family:'Patrick Hand',cursive;font-size:14px;color:#8a877f;">CSS-Grundlagen › Farben &amp; Text</div>
+          <div style="font-family:'Kalam',cursive;font-weight:700;font-size:20px;color:#2a2a2a;">Farben &amp; Textausrichtung</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:14px;">
+          <div style="font-family:'Patrick Hand',cursive;font-size:15px;color:#6b6863;">Lektion 12 / 25</div>
+          <div style="width:120px;height:11px;border:2px solid #2a2a2a;border-radius:8px;background:#fff;overflow:hidden;"><div style="width:48%;height:100%;background:#5b8def;"></div></div>
+          <div style="width:26px;height:26px;border:2px solid #2a2a2a;border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:'Patrick Hand',cursive;">✕</div>
+        </div>
+      </div>
+
+      <!-- task strip full width -->
+      <div style="padding:16px 22px;border-bottom:2px dashed #d8d5cc;background:#fafaf6;">
+        <div style="font-family:'Pathway Gothic One',sans-serif;letter-spacing:1px;font-size:14px;color:#8a877f;margin-bottom:4px;">AUFGABE</div>
+        <div style="font-family:'Patrick Hand',cursive;font-size:18px;color:#2a2a2a;">Gib der Überschrift die Farbe <b>teal</b> und zentriere den Text. <span style="color:#6b6863;border:2px solid #cfccc4;border-radius:8px;padding:2px 10px;margin-left:8px;font-size:15px;">Hinweis ▸</span></div>
+      </div>
+
+      <!-- 2 columns -->
+      <div style="display:flex;align-items:stretch;min-height:380px;">
+        <!-- editor -->
+        <div style="width:55%;padding:20px;border-right:2px dashed #d8d5cc;display:flex;flex-direction:column;gap:14px;">
+          <div>
+            <div style="font-family:'Pathway Gothic One',sans-serif;letter-spacing:1px;font-size:14px;color:#8a877f;margin-bottom:6px;">HTML — vorgegeben</div>
+            <div style="border:2px solid #cfccc4;border-radius:8px;background:#f4f3ee;padding:10px 12px;font-family:ui-monospace,monospace;font-size:13px;color:#9a978e;line-height:1.6;">&lt;h1&gt;Willkommen&lt;/h1&gt;&nbsp;&lt;p&gt;Ein Beispieltext.&lt;/p&gt;</div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;">
+            <div style="font-family:'Pathway Gothic One',sans-serif;letter-spacing:1px;font-size:14px;color:#2a2a2a;margin-bottom:6px;">CSS — dein Code</div>
+            <div style="flex:1;border:2px solid #2a2a2a;border-radius:8px;background:#fbfbf9;display:flex;overflow:hidden;">
+              <div style="width:34px;background:#f0eee8;border-right:2px solid #e0ddd4;font-family:ui-monospace,monospace;font-size:13px;color:#b5b2a8;text-align:right;padding:11px 7px;line-height:1.7;">1<br>2<br>3<br>4</div>
+              <div style="flex:1;padding:11px 13px;font-family:ui-monospace,monospace;font-size:14px;color:#2a2a2a;line-height:1.7;">h1 {<br>&nbsp;&nbsp;<span style="color:#5b8def;">color</span>: teal;<br>&nbsp;&nbsp;<span style="color:#5b8def;">text-align</span>: center;<br>}</div>
+            </div>
+          </div>
+        </div>
+        <!-- preview over feedback -->
+        <div style="width:45%;padding:20px;display:flex;flex-direction:column;gap:14px;">
+          <div style="flex:1;">
+            <div style="font-family:'Pathway Gothic One',sans-serif;letter-spacing:1px;font-size:14px;color:#8a877f;margin-bottom:6px;">LIVE-VORSCHAU</div>
+            <div style="border:2px solid #cfccc4;border-radius:8px;background:#fff;padding:24px 14px;text-align:center;height:calc(100% - 26px);">
+              <div style="font-family:'Kalam',cursive;font-weight:700;font-size:24px;color:#2a2a2a;">Willkommen</div>
+              <div style="height:8px;width:80%;background:#e6e4dd;border-radius:4px;margin:14px auto 0;"></div>
+            </div>
+          </div>
+          <div style="border:2px solid #2a2a2a;border-radius:8px;padding:13px;background:#fafaf6;display:flex;align-items:center;justify-content:space-between;gap:12px;">
+            <div style="font-family:'Patrick Hand',cursive;font-size:15px;color:#6b6863;">1 / 2 Prüfungen ok</div>
+            <div style="font-family:'Patrick Hand',cursive;font-size:16px;color:#fff;background:#5b8def;border:2px solid #2a2a2a;border-radius:8px;padding:7px 18px;box-shadow:2px 2px 0 #2a2a2a;">Prüfen</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 22px;border-top:2px solid #2a2a2a;background:#f3f1ec;">
+        <div style="font-family:'Patrick Hand',cursive;font-size:16px;color:#2a2a2a;border:2px solid #2a2a2a;border-radius:8px;padding:7px 16px;background:#fff;box-shadow:2px 2px 0 #2a2a2a;">← Zurück</div>
+        <div style="display:flex;gap:12px;">
+          <div style="font-family:'Patrick Hand',cursive;font-size:16px;color:#6b6863;border:2px solid #cfccc4;border-radius:8px;padding:7px 16px;">Lösung anzeigen</div>
+          <div style="font-family:'Patrick Hand',cursive;font-size:16px;color:#fff;background:#5b8def;border:2px solid #2a2a2a;border-radius:8px;padding:7px 18px;box-shadow:2px 2px 0 #2a2a2a;">Weiter →</div>
+        </div>
+      </div>
+    </div>
+    <div style="font-family:'Kalam',cursive;font-size:16px;color:#c2410c;margin-top:14px;transform:rotate(-0.4deg);">↑ Aufgabe als schmaler Streifen oben → mehr Breite für Editor &amp; Vorschau nebeneinander. Gut, wenn die Aufgabe kurz ist.</div>
+    </sc-if>
+
+    <!-- ===================== VARIANT C: stacked / mobile ===================== -->
+    <sc-if value="{{ isVarC }}" hint-placeholder-val="{{ false }}">
+    <div style="display:flex;gap:34px;align-items:flex-start;flex-wrap:wrap;">
+      <div style="width:430px;flex:none;background:#fff;border:2px solid #2a2a2a;border-radius:10px;box-shadow:4px 4px 0 rgba(42,42,42,0.12);overflow:hidden;">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 18px;border-bottom:2px solid #2a2a2a;background:#f3f1ec;">
+          <div style="font-family:'Kalam',cursive;font-weight:700;font-size:17px;color:#2a2a2a;">Farben &amp; Textausrichtung</div>
+          <div style="font-family:'Patrick Hand',cursive;font-size:14px;color:#6b6863;">12/25</div>
+        </div>
+        <div style="padding:16px 18px;display:flex;flex-direction:column;gap:14px;">
+          <div style="border:2px solid #cfccc4;border-radius:8px;padding:12px;background:#fafaf6;">
+            <div style="font-family:'Pathway Gothic One',sans-serif;letter-spacing:1px;font-size:13px;color:#8a877f;margin-bottom:4px;">AUFGABE</div>
+            <div style="font-family:'Patrick Hand',cursive;font-size:16px;color:#2a2a2a;">Gib der Überschrift die Farbe <b>teal</b> und zentriere den Text.</div>
+          </div>
+          <div>
+            <div style="font-family:'Pathway Gothic One',sans-serif;letter-spacing:1px;font-size:13px;color:#2a2a2a;margin-bottom:6px;">CSS — dein Code</div>
+            <div style="border:2px solid #2a2a2a;border-radius:8px;background:#fbfbf9;display:flex;overflow:hidden;">
+              <div style="width:30px;background:#f0eee8;border-right:2px solid #e0ddd4;font-family:ui-monospace,monospace;font-size:12px;color:#b5b2a8;text-align:right;padding:10px 6px;line-height:1.7;">1<br>2<br>3<br>4</div>
+              <div style="flex:1;padding:10px 12px;font-family:ui-monospace,monospace;font-size:13px;color:#2a2a2a;line-height:1.7;">h1 {<br>&nbsp;&nbsp;<span style="color:#5b8def;">color</span>: teal;<br>&nbsp;&nbsp;<span style="color:#5b8def;">text-align</span>: center;<br>}</div>
+            </div>
+          </div>
+          <div>
+            <div style="font-family:'Pathway Gothic One',sans-serif;letter-spacing:1px;font-size:13px;color:#8a877f;margin-bottom:6px;">VORSCHAU</div>
+            <div style="border:2px solid #cfccc4;border-radius:8px;background:#fff;padding:18px 12px;text-align:center;">
+              <div style="font-family:'Kalam',cursive;font-weight:700;font-size:20px;color:#2a2a2a;">Willkommen</div>
+              <div style="height:7px;width:80%;background:#e6e4dd;border-radius:4px;margin:10px auto 0;"></div>
+            </div>
+          </div>
+          <div style="border:2px solid #2a2a2a;border-radius:8px;padding:12px;background:#fafaf6;display:flex;align-items:center;justify-content:space-between;">
+            <div style="font-family:'Patrick Hand',cursive;font-size:14px;color:#6b6863;">1 / 2 ok</div>
+            <div style="font-family:'Patrick Hand',cursive;font-size:15px;color:#fff;background:#5b8def;border:2px solid #2a2a2a;border-radius:8px;padding:6px 16px;box-shadow:2px 2px 0 #2a2a2a;">Prüfen</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 18px;border-top:2px solid #2a2a2a;background:#f3f1ec;">
+          <div style="font-family:'Patrick Hand',cursive;font-size:15px;color:#2a2a2a;border:2px solid #2a2a2a;border-radius:8px;padding:6px 14px;background:#fff;">← Zurück</div>
+          <div style="font-family:'Patrick Hand',cursive;font-size:15px;color:#fff;background:#5b8def;border:2px solid #2a2a2a;border-radius:8px;padding:6px 16px;box-shadow:2px 2px 0 #2a2a2a;">Weiter →</div>
+        </div>
+      </div>
+      <div style="flex:1;min-width:220px;">
+        <div style="font-family:'Kalam',cursive;font-weight:700;font-size:19px;color:#2a2a2a;margin-bottom:10px;">Alles untereinander</div>
+        <div style="font-family:'Patrick Hand',cursive;font-size:17px;color:#6b6863;line-height:1.6;">Für schmale Screens (Handy) bzw. als Fallback: Aufgabe → Editor → Vorschau → Prüfung gestapelt, eine Spalte. So wird aus dem 2-/3-spaltigen Desktop-Layout responsiv ein Stapel.</div>
+        <div style="font-family:'Kalam',cursive;font-size:15px;color:#c2410c;margin-top:16px;transform:rotate(-0.6deg);">↖ Reihenfolge entscheidend: erst lesen, dann tippen, dann Ergebnis sehen.</div>
+      </div>
+    </div>
+    </sc-if>
+
+  </div>
+  </sc-if>
+
+  <!-- ============================================================ -->
+  <!-- SCREEN 4: PROFIL -->
+  <!-- ============================================================ -->
+  <sc-if value="{{ isProfile }}" hint-placeholder-val="{{ false }}">
+  <div style="max-width:920px;margin:0 auto;">
+    <div style="background:#fff;border:2px solid #2a2a2a;border-radius:10px;box-shadow:4px 4px 0 rgba(42,42,42,0.12);overflow:hidden;">
+      <div style="display:flex;align-items:center;gap:8px;padding:11px 16px;border-bottom:2px solid #2a2a2a;background:#f3f1ec;">
+        <div style="width:11px;height:11px;border:2px solid #2a2a2a;border-radius:50%;"></div>
+        <div style="width:11px;height:11px;border:2px solid #2a2a2a;border-radius:50%;"></div>
+        <div style="width:11px;height:11px;border:2px solid #2a2a2a;border-radius:50%;"></div>
+        <div style="flex:1;height:22px;border:2px solid #cfccc4;border-radius:11px;background:#fff;margin-left:10px;"></div>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 26px;border-bottom:2px dashed #d8d5cc;">
+        <div style="font-family:'Kalam',cursive;font-weight:700;font-size:21px;color:#2a2a2a;">&lt;/&gt; LernCSS</div>
+        <div style="display:flex;align-items:center;gap:22px;font-family:'Patrick Hand',cursive;font-size:17px;color:#8a877f;"><div>Übersicht</div><div style="color:#2a2a2a;border-bottom:3px solid #5b8def;padding-bottom:2px;">Profil</div><div style="border:2px solid #2a2a2a;border-radius:8px;padding:5px 14px;box-shadow:2px 2px 0 #2a2a2a;color:#2a2a2a;">Login</div></div>
+      </div>
+
+      <div style="padding:28px 34px 40px;">
+        <!-- identity + streak -->
+        <div style="display:flex;align-items:center;gap:22px;margin-bottom:28px;">
+          <div style="width:80px;height:80px;border-radius:50%;border:2px solid #2a2a2a;background:repeating-linear-gradient(45deg,#f0eee8,#f0eee8 6px,#e6e4dc 6px,#e6e4dc 12px);"></div>
+          <div style="flex:1;">
+            <div style="font-family:'Kalam',cursive;font-weight:700;font-size:24px;color:#2a2a2a;">Dein Fortschritt</div>
+            <div style="font-family:'Patrick Hand',cursive;font-size:16px;color:#6b6863;">Lokal im Browser gespeichert · Login optional</div>
+          </div>
+          <div style="border:2px solid #2a2a2a;border-radius:10px;padding:12px 20px;text-align:center;box-shadow:3px 3px 0 rgba(42,42,42,0.1);">
+            <div style="font-family:'Kalam',cursive;font-weight:700;font-size:30px;color:#5b8def;">5</div>
+            <div style="font-family:'Patrick Hand',cursive;font-size:14px;color:#6b6863;">Tage Streak 🔥</div>
+          </div>
+        </div>
+
+        <!-- stat tiles -->
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:30px;">
+          <div style="border:2px solid #cfccc4;border-radius:10px;padding:18px;text-align:center;">
+            <div style="font-family:'Kalam',cursive;font-weight:700;font-size:28px;color:#2a2a2a;">8</div>
+            <div style="font-family:'Patrick Hand',cursive;font-size:15px;color:#6b6863;">Lektionen erledigt</div>
+          </div>
+          <div style="border:2px solid #cfccc4;border-radius:10px;padding:18px;text-align:center;">
+            <div style="font-family:'Kalam',cursive;font-weight:700;font-size:28px;color:#2a2a2a;">1</div>
+            <div style="font-family:'Patrick Hand',cursive;font-size:15px;color:#6b6863;">Kapitel abgeschlossen</div>
+          </div>
+          <div style="border:2px solid #cfccc4;border-radius:10px;padding:18px;text-align:center;">
+            <div style="font-family:'Kalam',cursive;font-weight:700;font-size:28px;color:#2a2a2a;">32%</div>
+            <div style="font-family:'Patrick Hand',cursive;font-size:15px;color:#6b6863;">Gesamt CSS-Grundlagen</div>
+          </div>
+        </div>
+
+        <!-- course progress row -->
+        <div style="font-family:'Kalam',cursive;font-weight:700;font-size:18px;color:#2a2a2a;margin-bottom:10px;">Kurse</div>
+        <div style="border:2px solid #cfccc4;border-radius:8px;padding:14px 16px;display:flex;align-items:center;gap:16px;margin-bottom:30px;">
+          <div style="font-family:'Patrick Hand',cursive;font-size:17px;color:#2a2a2a;width:160px;">CSS-Grundlagen</div>
+          <div style="flex:1;height:13px;border:2px solid #2a2a2a;border-radius:8px;background:#fff;overflow:hidden;"><div style="width:32%;height:100%;background:#5b8def;"></div></div>
+          <div style="font-family:'Patrick Hand',cursive;font-size:15px;color:#6b6863;">8 / 25</div>
+        </div>
+
+        <!-- badges -->
+        <div style="font-family:'Kalam',cursive;font-weight:700;font-size:18px;color:#2a2a2a;margin-bottom:12px;">Badges</div>
+        <div style="display:flex;gap:18px;flex-wrap:wrap;">
+          <div style="text-align:center;">
+            <div style="width:66px;height:66px;border:2px solid #2a2a2a;border-radius:50%;background:#fffaf0;display:flex;align-items:center;justify-content:center;font-size:26px;box-shadow:2px 2px 0 #2a2a2a;">★</div>
+            <div style="font-family:'Patrick Hand',cursive;font-size:13px;color:#6b6863;margin-top:6px;">Erste Lektion</div>
+          </div>
+          <div style="text-align:center;">
+            <div style="width:66px;height:66px;border:2px solid #2a2a2a;border-radius:50%;background:#fffaf0;display:flex;align-items:center;justify-content:center;font-size:26px;box-shadow:2px 2px 0 #2a2a2a;">◆</div>
+            <div style="font-family:'Patrick Hand',cursive;font-size:13px;color:#6b6863;margin-top:6px;">Kapitel 1</div>
+          </div>
+          <div style="text-align:center;opacity:0.45;">
+            <div style="width:66px;height:66px;border:2px dashed #cfccc4;border-radius:50%;background:#f6f5f0;display:flex;align-items:center;justify-content:center;font-size:22px;color:#b5b2a8;">?</div>
+            <div style="font-family:'Patrick Hand',cursive;font-size:13px;color:#9a978e;margin-top:6px;">5er Streak</div>
+          </div>
+          <div style="text-align:center;opacity:0.45;">
+            <div style="width:66px;height:66px;border:2px dashed #cfccc4;border-radius:50%;background:#f6f5f0;display:flex;align-items:center;justify-content:center;font-size:22px;color:#b5b2a8;">?</div>
+            <div style="font-family:'Patrick Hand',cursive;font-size:13px;color:#9a978e;margin-top:6px;">Kurs fertig</div>
+          </div>
+        </div>
+
+        <!-- LIVE-CHAT -->
+        <div style="display:flex;align-items:center;justify-content:space-between;margin:32px 0 12px;">
+          <div style="font-family:'Kalam',cursive;font-weight:700;font-size:18px;color:#2a2a2a;">Live-Chat · wer ist online</div>
+          <div style="display:flex;align-items:center;gap:6px;font-family:'Patrick Hand',cursive;font-size:14px;color:#8a877f;"><span style="width:9px;height:9px;border-radius:50%;background:#6FB76F;border:1px solid #2a2a2a;display:inline-block;"></span> 14 online</div>
+        </div>
+        <div style="display:flex;align-items:stretch;border:2px solid #2a2a2a;border-radius:10px;overflow:hidden;box-shadow:3px 3px 0 rgba(42,42,42,0.08);min-height:340px;">
+
+          <!-- left: filter + online users -->
+          <div style="width:252px;flex:none;border-right:2px dashed #d8d5cc;display:flex;flex-direction:column;">
+            <!-- filter tabs -->
+            <div style="display:flex;border-bottom:2px dashed #d8d5cc;">
+              <div onClick="{{ filterAll }}" style="position:relative;flex:1;text-align:center;cursor:pointer;font-family:'Patrick Hand',cursive;font-size:15px;color:#2a2a2a;padding:11px 6px;">Alle Nutzer (14)<sc-if value="{{ isFilterAll }}" hint-placeholder-val="{{ true }}"><div style="position:absolute;left:14px;right:14px;bottom:-2px;height:3px;background:#5b8def;border-radius:2px;"></div></sc-if></div>
+              <div onClick="{{ filterCourse }}" style="position:relative;flex:1;text-align:center;cursor:pointer;font-family:'Patrick Hand',cursive;font-size:15px;color:#2a2a2a;padding:11px 6px;border-left:2px dashed #d8d5cc;">Mein Kurs (5)<sc-if value="{{ isFilterCourse }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;left:14px;right:14px;bottom:-2px;height:3px;background:#5b8def;border-radius:2px;"></div></sc-if></div>
+            </div>
+
+            <!-- list: ALL -->
+            <sc-if value="{{ isFilterAll }}" hint-placeholder-val="{{ true }}">
+            <div style="flex:1;padding:8px;display:flex;flex-direction:column;gap:3px;">
+              <div style="display:flex;align-items:center;gap:9px;padding:7px 8px;border-radius:6px;font-family:'Patrick Hand',cursive;font-size:15px;color:#2a2a2a;"><span style="width:9px;height:9px;border-radius:50%;background:#6FB76F;border:1px solid #2a2a2a;flex:none;"></span>Lena M.<span style="margin-left:auto;font-size:12px;color:#8a877f;">CSS-Grundl.</span></div>
+              <div style="display:flex;align-items:center;gap:9px;padding:7px 8px;border-radius:6px;font-family:'Patrick Hand',cursive;font-size:15px;color:#2a2a2a;"><span style="width:9px;height:9px;border-radius:50%;background:#6FB76F;border:1px solid #2a2a2a;flex:none;"></span>Tom K.<span style="margin-left:auto;font-size:12px;color:#8a877f;">Flexbox</span></div>
+              <div style="display:flex;align-items:center;gap:9px;padding:7px 8px;border-radius:6px;font-family:'Patrick Hand',cursive;font-size:15px;color:#2a2a2a;"><span style="width:9px;height:9px;border-radius:50%;background:#6FB76F;border:1px solid #2a2a2a;flex:none;"></span>Jonas<span style="margin-left:auto;font-size:12px;color:#c2410c;border:1px solid #e0c4a8;border-radius:10px;padding:0 7px;">Mentor</span></div>
+              <div style="display:flex;align-items:center;gap:9px;padding:7px 8px;border-radius:6px;font-family:'Patrick Hand',cursive;font-size:15px;color:#2a2a2a;"><span style="width:9px;height:9px;border-radius:50%;background:#6FB76F;border:1px solid #2a2a2a;flex:none;"></span>Sara P.<span style="margin-left:auto;font-size:12px;color:#8a877f;">CSS-Grundl.</span></div>
+              <div style="display:flex;align-items:center;gap:9px;padding:7px 8px;border-radius:6px;font-family:'Patrick Hand',cursive;font-size:15px;color:#2a2a2a;"><span style="width:9px;height:9px;border-radius:50%;background:#6FB76F;border:1px solid #2a2a2a;flex:none;"></span>Ali R.<span style="margin-left:auto;font-size:12px;color:#8a877f;">Animationen</span></div>
+              <div style="display:flex;align-items:center;gap:9px;padding:7px 8px;border-radius:6px;font-family:'Patrick Hand',cursive;font-size:15px;color:#2a2a2a;"><span style="width:9px;height:9px;border-radius:50%;background:#6FB76F;border:1px solid #2a2a2a;flex:none;"></span>Mira S.<span style="margin-left:auto;font-size:12px;color:#8a877f;">CSS-Grundl.</span></div>
+              <div style="display:flex;align-items:center;gap:9px;padding:7px 8px;border-radius:6px;font-family:'Patrick Hand',cursive;font-size:15px;color:#2a2a2a;"><span style="width:9px;height:9px;border-radius:50%;background:#6FB76F;border:1px solid #2a2a2a;flex:none;"></span>Ben H.<span style="margin-left:auto;font-size:12px;color:#8a877f;">Flexbox</span></div>
+              <div style="font-family:'Patrick Hand',cursive;font-size:13px;color:#9a978e;text-align:center;padding:6px;">+ 7 weitere</div>
+            </div>
+            </sc-if>
+
+            <!-- list: MEIN KURS -->
+            <sc-if value="{{ isFilterCourse }}" hint-placeholder-val="{{ false }}">
+            <div style="flex:1;padding:8px;display:flex;flex-direction:column;gap:3px;">
+              <div style="font-family:'Patrick Hand',cursive;font-size:13px;color:#8a877f;padding:4px 8px;">Online in „CSS-Grundlagen"</div>
+              <div style="display:flex;align-items:center;gap:9px;padding:7px 8px;border-radius:6px;font-family:'Patrick Hand',cursive;font-size:15px;color:#2a2a2a;background:#eef4fe;"><span style="width:9px;height:9px;border-radius:50%;background:#6FB76F;border:1px solid #2a2a2a;flex:none;"></span>Du<span style="margin-left:auto;font-size:12px;color:#5b8def;">ich</span></div>
+              <div style="display:flex;align-items:center;gap:9px;padding:7px 8px;border-radius:6px;font-family:'Patrick Hand',cursive;font-size:15px;color:#2a2a2a;"><span style="width:9px;height:9px;border-radius:50%;background:#6FB76F;border:1px solid #2a2a2a;flex:none;"></span>Lena M.</div>
+              <div style="display:flex;align-items:center;gap:9px;padding:7px 8px;border-radius:6px;font-family:'Patrick Hand',cursive;font-size:15px;color:#2a2a2a;"><span style="width:9px;height:9px;border-radius:50%;background:#6FB76F;border:1px solid #2a2a2a;flex:none;"></span>Sara P.</div>
+              <div style="display:flex;align-items:center;gap:9px;padding:7px 8px;border-radius:6px;font-family:'Patrick Hand',cursive;font-size:15px;color:#2a2a2a;"><span style="width:9px;height:9px;border-radius:50%;background:#6FB76F;border:1px solid #2a2a2a;flex:none;"></span>Mira S.</div>
+              <div style="display:flex;align-items:center;gap:9px;padding:7px 8px;border-radius:6px;font-family:'Patrick Hand',cursive;font-size:15px;color:#2a2a2a;"><span style="width:9px;height:9px;border-radius:50%;background:#6FB76F;border:1px solid #2a2a2a;flex:none;"></span>Jonas<span style="margin-left:auto;font-size:12px;color:#c2410c;border:1px solid #e0c4a8;border-radius:10px;padding:0 7px;">Mentor</span></div>
+            </div>
+            </sc-if>
+          </div>
+
+          <!-- right: chat thread -->
+          <div style="flex:1;display:flex;flex-direction:column;">
+            <div style="flex:1;padding:18px;display:flex;flex-direction:column;gap:14px;">
+              <!-- incoming -->
+              <div style="max-width:78%;align-self:flex-start;">
+                <div style="font-family:'Patrick Hand',cursive;font-size:13px;color:#8a877f;margin-bottom:3px;">Lena M.</div>
+                <div style="border:2px solid #cfccc4;border-radius:10px 10px 10px 2px;background:#f4f3ee;padding:9px 13px;font-family:'Patrick Hand',cursive;font-size:16px;color:#2a2a2a;">Wie zentriere ich den Text nochmal?</div>
+              </div>
+              <!-- incoming -->
+              <div style="max-width:78%;align-self:flex-start;">
+                <div style="font-family:'Patrick Hand',cursive;font-size:13px;color:#8a877f;margin-bottom:3px;">Sara P.</div>
+                <div style="border:2px solid #cfccc4;border-radius:10px 10px 10px 2px;background:#f4f3ee;padding:9px 13px;font-family:ui-monospace,monospace;font-size:14px;color:#2a2a2a;">text-align: center;</div>
+              </div>
+              <!-- own -->
+              <div style="max-width:78%;align-self:flex-end;text-align:right;">
+                <div style="font-family:'Patrick Hand',cursive;font-size:13px;color:#5b8def;margin-bottom:3px;">Du</div>
+                <div style="border:2px solid #5b8def;border-radius:10px 10px 2px 10px;background:#eef4fe;padding:9px 13px;font-family:'Patrick Hand',cursive;font-size:16px;color:#2a2a2a;text-align:left;">ah, danke euch!</div>
+              </div>
+              <!-- mentor -->
+              <div style="max-width:78%;align-self:flex-start;">
+                <div style="font-family:'Patrick Hand',cursive;font-size:13px;color:#c2410c;margin-bottom:3px;">Jonas · Mentor</div>
+                <div style="border:2px solid #e0c4a8;border-radius:10px 10px 10px 2px;background:#fffaf0;padding:9px 13px;font-family:'Patrick Hand',cursive;font-size:16px;color:#2a2a2a;">Tipp: schau dir Lektion 2.1 nochmal an</div>
+              </div>
+            </div>
+            <!-- input -->
+            <div style="border-top:2px dashed #d8d5cc;padding:12px 16px;display:flex;gap:10px;align-items:center;">
+              <div style="flex:1;height:40px;border:2px solid #cfccc4;border-radius:8px;background:#fff;display:flex;align-items:center;padding:0 14px;font-family:'Patrick Hand',cursive;color:#b5b2a8;font-size:16px;">Nachricht schreiben…</div>
+              <div style="font-family:'Patrick Hand',cursive;font-size:16px;color:#fff;background:#5b8def;border:2px solid #2a2a2a;border-radius:8px;padding:9px 18px;box-shadow:2px 2px 0 #2a2a2a;">Senden</div>
+            </div>
+          </div>
+        </div>
+        <div style="font-family:'Kalam',cursive;font-size:15px;color:#c2410c;margin-top:12px;transform:rotate(-0.4deg);">↑ Filter umschaltbar: alle Online-Nutzer ↔ nur Leute aus deinem Kurs. Mentoren sind markiert.</div>
+      </div>
+    </div>
+    <div style="font-family:'Kalam',cursive;font-size:16px;color:#c2410c;margin-top:14px;transform:rotate(-0.5deg);">↑ Fortschritt · Streak · Badges. Erweiterbar um XP / Zertifikate, sobald Accounts dazukommen.</div>
+  </div>
+  </sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { screen: 'editor', variant: 'b', chatFilter: 'all' };
+  renderVals() {
+    const { screen, variant, chatFilter } = this.state;
+    return {
+      isFilterAll: chatFilter === 'all',
+      isFilterCourse: chatFilter === 'course',
+      filterAll: () => this.setState({ chatFilter: 'all' }),
+      filterCourse: () => this.setState({ chatFilter: 'course' }),
+      isOverview: screen === 'overview',
+      isDetail: screen === 'detail',
+      isEditor: screen === 'editor',
+      isProfile: screen === 'profile',
+      isVarA: variant === 'a',
+      isVarB: variant === 'b',
+      isVarC: variant === 'c',
+      goOverview: () => this.setState({ screen: 'overview' }),
+      goDetail: () => this.setState({ screen: 'detail' }),
+      goEditor: () => this.setState({ screen: 'editor' }),
+      goProfile: () => this.setState({ screen: 'profile' }),
+      setVarA: () => this.setState({ variant: 'a' }),
+      setVarB: () => this.setState({ variant: 'b' }),
+      setVarC: () => this.setState({ variant: 'c' }),
+    };
+  }
+}
+</script>
+</body>
+</html>
