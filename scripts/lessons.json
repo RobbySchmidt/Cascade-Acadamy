@@ -22,7 +22,7 @@
     "assertions": [
       { "selector": "p", "prop": "color", "expected": "blue" }
     ],
-    "hint": "Schreibe `color: blue;` zwischen die geschweiften Klammern des `p`-Selektors.",
+    "hint": "Die Eigenschaft `color` bestimmt die Textfarbe eines Elements. Jede Eigenschaft kommt zwischen die geschweiften Klammern und endet mit einem Semikolon.",
     "solution": "p {\n  color: blue;\n}"
   },
   {
@@ -36,7 +36,7 @@
     "assertions": [
       { "selector": ".box", "prop": "background-color", "expected": "teal" }
     ],
-    "hint": "Verwende den Klassen-Selektor `.box` und setze `background-color: teal;`.",
+    "hint": "Mit `background-color` legst du die Hintergrundfarbe fest. Klassen sprichst du über einen Selektor mit Punkt davor an.",
     "solution": ".box {\n  background-color: teal;\n}"
   },
   {
@@ -51,7 +51,7 @@
       { "selector": ".box", "prop": "color", "expected": "blue" },
       { "selector": ".box", "prop": "background-color", "expected": "teal" }
     ],
-    "hint": "Setze sowohl `color: blue;` als auch `background-color: teal;` im `.box`-Block.",
+    "hint": "Du kannst mehrere Eigenschaften untereinander schreiben – jede in eigener Zeile. `color` steuert die Textfarbe, `background-color` die Hintergrundfarbe.",
     "solution": ".box {\n  color: blue;\n  background-color: teal;\n}"
   },
   {
@@ -66,7 +66,7 @@
       { "selector": "h1", "prop": "color", "expected": "teal" },
       { "selector": "h1", "prop": "text-align", "expected": "center" }
     ],
-    "hint": "Du brauchst zwei Zeilen: `color: teal;` und `text-align: center;`.",
+    "hint": "`color` färbt den Text, `text-align` richtet ihn innerhalb des Elements aus (z. B. links, rechts oder zentriert).",
     "solution": "h1 {\n  color: teal;\n  text-align: center;\n}"
   },
   {
@@ -74,15 +74,15 @@
     "sort": 6,
     "title": "Schriftgröße & -dicke",
     "type": "uebung",
-    "task": "Mit `font-size` änderst du die Größe und mit `font-weight` die Dicke der Schrift. Gib der `h1` eine `font-size` von `32px` und ein `font-weight` von `700`.",
-    "html": "<h1>Große, fette Überschrift</h1>",
-    "css_starter": "h1 {\n  \n}",
+    "task": "Mit `font-size` änderst du die Größe und mit `font-weight` die Dicke der Schrift. Gib dem `p` eine `font-size` von `32px` und ein `font-weight` von `700`.",
+    "html": "<p>Großer, fetter Text</p>",
+    "css_starter": "p {\n  \n}",
     "assertions": [
-      { "selector": "h1", "prop": "font-size", "expected": "32px" },
-      { "selector": "h1", "prop": "font-weight", "expected": "700" }
+      { "selector": "p", "prop": "font-size", "expected": "32px" },
+      { "selector": "p", "prop": "font-weight", "expected": "700" }
     ],
-    "hint": "Setze `font-size: 32px;` und `font-weight: 700;`.",
-    "solution": "h1 {\n  font-size: 32px;\n  font-weight: 700;\n}"
+    "hint": "`font-size` steuert die Größe der Schrift (z. B. in Pixeln), `font-weight` die Dicke – je höher der Wert, desto fetter.",
+    "solution": "p {\n  font-size: 32px;\n  font-weight: 700;\n}"
   },
   {
     "chapter": "Text & Schrift",
@@ -96,7 +96,7 @@
       { "selector": "p", "prop": "line-height", "expected": "24px" },
       { "selector": "p", "prop": "font-family", "expected": "Arial" }
     ],
-    "hint": "Setze `font-family: Arial;` und `line-height: 24px;`.",
+    "hint": "`font-family` bestimmt die Schriftart, `line-height` den Abstand zwischen den Zeilen.",
     "solution": "p {\n  font-family: Arial;\n  line-height: 24px;\n}"
   },
   {
@@ -111,7 +111,7 @@
       { "selector": "h1", "prop": "text-transform", "expected": "uppercase" },
       { "selector": "h1", "prop": "text-decoration-line", "expected": "underline" }
     ],
-    "hint": "Setze `text-transform: uppercase;` und `text-decoration: underline;`.",
+    "hint": "`text-transform` ändert die Groß-/Kleinschreibung, `text-decoration` fügt Linien wie eine Unterstreichung hinzu.",
     "solution": "h1 {\n  text-transform: uppercase;\n  text-decoration: underline;\n}"
   },
   {
@@ -125,7 +125,7 @@
     "assertions": [
       { "selector": ".box", "prop": "padding-top", "expected": "24px" }
     ],
-    "hint": "Setze `padding: 24px;` – das gilt für alle vier Seiten.",
+    "hint": "`padding` ist der Innenabstand zwischen Rand und Inhalt. Ein einzelner Wert gilt für alle vier Seiten gleichzeitig.",
     "solution": ".box {\n  padding: 24px;\n}"
   },
   {
@@ -139,7 +139,7 @@
     "assertions": [
       { "selector": ".box", "prop": "margin-top", "expected": "16px" }
     ],
-    "hint": "Setze `margin: 16px;` oder gezielt `margin-top: 16px;`.",
+    "hint": "`margin` ist der Außenabstand zu den Nachbarelementen. Du kannst ihn für alle Seiten oder gezielt nur nach oben setzen.",
     "solution": ".box {\n  margin: 16px;\n}"
   },
   {
@@ -154,7 +154,7 @@
       { "selector": ".box", "prop": "border-style", "expected": "solid" },
       { "selector": ".box", "prop": "border-width", "expected": "2px" }
     ],
-    "hint": "Die Kurzschreibweise lautet `border: 2px solid teal;`.",
+    "hint": "Ein Rahmen braucht drei Angaben: Breite, Stil (z. B. durchgezogen) und Farbe. Mit der Kurzschreibweise `border` gibst du alle drei in einer Zeile an.",
     "solution": ".box {\n  border: 2px solid teal;\n}"
   },
   {
@@ -169,7 +169,7 @@
       { "selector": ".box", "prop": "border-radius", "expected": "12px" },
       { "selector": ".box", "prop": "padding-top", "expected": "16px" }
     ],
-    "hint": "Setze `border-radius: 12px;` und `padding: 16px;`.",
+    "hint": "`border-radius` rundet die Ecken ab – je größer der Wert, desto runder. `padding` schafft Platz zwischen Rand und Inhalt.",
     "solution": ".box {\n  border-radius: 12px;\n  padding: 16px;\n}"
   },
   {
@@ -183,7 +183,7 @@
     "assertions": [
       { "selector": ".box", "prop": "background-color", "expected": "teal" }
     ],
-    "hint": "Setze `background-color: teal;`.",
+    "hint": "Mit `background-color` füllst du die Fläche einer Box mit einer Hintergrundfarbe.",
     "solution": ".box {\n  background-color: teal;\n}"
   },
   {
@@ -198,7 +198,7 @@
       { "selector": ".box", "prop": "width", "expected": "200px" },
       { "selector": ".box", "prop": "display", "expected": "flex" }
     ],
-    "hint": "Setze `width: 200px;` und `display: flex;`.",
+    "hint": "`width` legt die Breite eines Elements fest. `display` bestimmt, wie es angezeigt und angeordnet wird (z. B. als flexibler Container).",
     "solution": ".box {\n  width: 200px;\n  display: flex;\n}"
   },
   {
@@ -214,7 +214,7 @@
       { "selector": ".card", "prop": "border-radius", "expected": "12px" },
       { "selector": ".card", "prop": "background-color", "expected": "teal" }
     ],
-    "hint": "Kombiniere `padding: 20px;`, `border-radius: 12px;` und `background-color: teal;`.",
+    "hint": "Kombiniere, was du gelernt hast: Innenabstand mit `padding`, runde Ecken mit `border-radius` und eine Hintergrundfarbe mit `background-color`. Die genauen Werte stehen in der Aufgabe.",
     "solution": ".card {\n  padding: 20px;\n  border-radius: 12px;\n  background-color: teal;\n}"
   }
 ]

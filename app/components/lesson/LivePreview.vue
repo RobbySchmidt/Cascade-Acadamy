@@ -29,22 +29,22 @@ defineExpose({ getDoc })
         class="font-semibold uppercase text-text-faint"
         style="font-size: 11.5px; letter-spacing: 1px"
       >Live-Vorschau</span>
-      <span class="flex items-center gap-[6px] font-medium" style="font-size: 12.5px; color: #2BB673">
-        <span style="font-size: 9px; line-height: 1">●</span> aktualisiert
+      <span class="flex items-center gap-[6px] font-medium" style="font-size: 12.5px; color: #2BD68A">
+        <span class="inline-block rounded-full" style="width: 7px; height: 7px; background: #2BD68A" /> aktualisiert
       </span>
     </div>
 
-    <!-- preview box -->
+    <!-- preview box: always light, tinted to match the light editor input (#F3FAF8) -->
     <div
-      class="overflow-hidden border border-border bg-surface"
-      style="border-radius: 12px; min-height: 200px"
+      class="overflow-hidden border border-border"
+      style="border-radius: 12px; min-height: 200px; background: #F3FAF8"
     >
       <iframe
         ref="frame"
         sandbox="allow-same-origin"
         :srcdoc="doc"
         title="Live-Vorschau"
-        style="width: 100%; height: 200px; border: 0; display: block"
+        style="width: 100%; height: 200px; border: 0; display: block; background: #F3FAF8"
       />
     </div>
   </div>

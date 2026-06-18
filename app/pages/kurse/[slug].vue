@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { ArrowLeft } from 'lucide-vue-next'
+
 interface Lesson {
   id: number
   title: string
@@ -56,50 +58,50 @@ function goToLesson(id: number | string) {
     <!-- 404 -->
     <div v-if="error || !course" class="flex flex-col items-start" style="gap: 14px">
       <h1 class="font-display font-bold text-text" style="font-size: 26px">Kurs nicht gefunden</h1>
-      <NuxtLink to="/kurse" class="font-semibold text-teal-700 no-underline">← Alle Kurse</NuxtLink>
+      <NuxtLink to="/kurse" class="inline-flex items-center gap-[6px] font-semibold text-teal-700 no-underline"><ArrowLeft :size="16" /> Alle Kurse</NuxtLink>
     </div>
 
     <template v-else>
       <!-- back link -->
       <NuxtLink
         to="/kurse"
-        class="inline-block font-medium text-text-muted no-underline transition-colors hover:text-text"
+        class="inline-flex items-center gap-[6px] font-medium text-text-muted no-underline transition-colors hover:text-text"
         style="font-size: 14px; margin-bottom: 16px"
-      >← Alle Kurse</NuxtLink>
+      ><ArrowLeft :size="16" /> Alle Kurse</NuxtLink>
 
       <!-- HEADER BANNER -->
       <section
-        class="relative overflow-hidden"
-        style="border-radius: 20px; padding: 32px 36px; background: linear-gradient(135deg,#0E7A70,#12B5A5); box-shadow: 0 20px 44px -22px rgba(14,122,112,0.7)"
+        class="relative overflow-hidden border border-border"
+        style="border-radius: 20px; padding: 32px 36px; background: radial-gradient(130% 150% at 86% -30%, rgba(18,181,165,0.42) 0%, rgba(18,181,165,0.06) 42%, rgba(255,255,255,0) 68%), #11201D"
       >
         <LightCircles
-          :circles="[{ size: 240, top: '-60px', right: '-50px', opacity: 0.10 }]"
+          :circles="[{ size: 240, top: '-60px', right: '-50px', opacity: 0.035 }]"
         />
 
         <div class="relative z-10 flex flex-col" style="gap: 14px">
           <div class="flex flex-wrap" style="gap: 8px">
             <span
-              class="rounded-pill bg-white/15 font-semibold text-white"
+              class="rounded-pill bg-teal-soft font-semibold text-teal-700"
               style="padding: 5px 13px; font-size: 12.5px"
             >{{ course.level }}</span>
             <span
-              class="rounded-pill bg-white/15 font-semibold text-white"
+              class="rounded-pill bg-inset-2 font-semibold text-text-muted"
               style="padding: 5px 13px; font-size: 12.5px"
             >{{ course.totalCount }} Lektionen · {{ course.chapterCount }} Kapitel</span>
           </div>
 
           <h1
-            class="font-display font-extrabold text-white"
+            class="font-display font-extrabold text-text"
             style="font-size: 30px; line-height: 1.15; letter-spacing: -0.5px"
           >{{ course.title }}</h1>
 
-          <p class="text-white/85" style="font-size: 16px; line-height: 1.5; max-width: 640px">
+          <p class="text-text-muted" style="font-size: 16px; line-height: 1.5; max-width: 640px">
             {{ course.description }}
           </p>
 
           <div class="flex items-center" style="gap: 16px; margin-top: 6px">
-            <ProgressBar :percent="course.percent" variant="onTeal" class="flex-1" />
-            <span class="shrink-0 font-medium text-white" style="font-size: 14px">
+            <ProgressBar :percent="course.percent" variant="teal" class="flex-1" />
+            <span class="shrink-0 font-medium text-text" style="font-size: 14px">
               {{ course.percent }} % · {{ course.doneCount }} / {{ course.totalCount }}
             </span>
           </div>

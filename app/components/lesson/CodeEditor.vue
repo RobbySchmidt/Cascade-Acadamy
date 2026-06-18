@@ -22,6 +22,7 @@ const themeCompartment = new Compartment()
 
 interface ThemePalette {
   codeBg: string
+  edge: string
   gutterBg: string
   gutterText: string
   codeText: string
@@ -30,24 +31,28 @@ interface ThemePalette {
   value: string
 }
 
+// Teal-harmonized to match the app's dark, teal-tinted chrome:
+// dark = deep teal ink (not purple), light = cool teal-white (not warm cream).
 const PALETTES: Record<'light' | 'dark', ThemePalette> = {
   light: {
-    codeBg: '#FBFAF6',
-    gutterBg: '#F1EDE6',
-    gutterText: '#BBB2A7',
-    codeText: '#3A332E',
+    codeBg: '#F3FAF8',
+    edge: '#D4E7E1',
+    gutterBg: '#E6F2EE',
+    gutterText: '#9DBDB6',
+    codeText: '#18211F',
     selector: '#1F2937',
-    property: '#2563EB',
+    property: '#0E7490',
     value: '#15803D',
   },
   dark: {
-    codeBg: '#1B1A2E',
-    gutterBg: '#161628',
-    gutterText: '#565273',
-    codeText: '#E6E3F5',
+    codeBg: '#0E1C19',
+    edge: '#1E332E',
+    gutterBg: '#0A1714',
+    gutterText: '#557068',
+    codeText: '#DDEBE8',
     selector: '#FFCB6B',
-    property: '#82AAFF',
-    value: '#C3E88D',
+    property: '#5FE0D2',
+    value: '#B6E59E',
   },
 }
 
@@ -59,7 +64,8 @@ function buildTheme(name: 'light' | 'dark') {
       backgroundColor: p.codeBg,
       color: p.codeText,
       fontSize: '13px',
-      borderRadius: '0',
+      borderRadius: '10px',
+      border: `1px solid ${p.edge}`,
     },
     '.cm-scroller': {
       fontFamily: '"JetBrains Mono", monospace',
@@ -84,7 +90,7 @@ function buildTheme(name: 'light' | 'dark') {
     '.cm-activeLineGutter': { backgroundColor: 'transparent' },
     '.cm-cursor, .cm-dropCursor': { borderLeftColor: p.codeText },
     '&.cm-focused .cm-selectionBackground, .cm-selectionBackground, .cm-content ::selection': {
-      backgroundColor: name === 'dark' ? '#33324f' : '#dcd6c8',
+      backgroundColor: name === 'dark' ? 'rgba(18,181,165,0.22)' : '#CFE9E3',
     },
     '.cm-line': { padding: '0 12px' },
   }, { dark: name === 'dark' })
@@ -93,7 +99,7 @@ function buildTheme(name: 'light' | 'dark') {
     { tag: tags.tagName, color: p.selector },
     { tag: tags.typeName, color: p.selector },
     { tag: tags.className, color: p.selector },
-    { tag: tags.angleBracket, color: name === 'dark' ? '#89DDFF' : '#6B7280' },
+    { tag: tags.angleBracket, color: name === 'dark' ? '#7FB5AD' : '#6B7280' },
     { tag: tags.propertyName, color: p.property },
     { tag: tags.string, color: p.value },
     { tag: tags.number, color: p.value },
@@ -104,7 +110,7 @@ function buildTheme(name: 'light' | 'dark') {
     { tag: tags.literal, color: p.value },
     { tag: tags.color, color: p.value },
     { tag: tags.variableName, color: p.value },
-    { tag: tags.comment, color: name === 'dark' ? '#8E89A8' : '#9A9189', fontStyle: 'italic' },
+    { tag: tags.comment, color: name === 'dark' ? '#5C7A74' : '#8AA39D', fontStyle: 'italic' },
     { tag: tags.punctuation, color: p.codeText },
   ])
 

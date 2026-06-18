@@ -9,6 +9,7 @@ export default defineNuxtConfig({
     sessionSecret: process.env.NUXT_SESSION_SECRET,
   },
   app: {
+    pageTransition: { name: 'page', mode: 'out-in' },
     head: {
       htmlAttrs: { lang: 'de' },
       title: 'Cascade Academy',

@@ -8,7 +8,7 @@ const props = withDefaults(defineProps<{
 
 const clamped = computed(() => Math.max(0, Math.min(100, props.percent)))
 
-const trackColor = computed(() => props.variant === 'onTeal' ? 'rgba(255,255,255,0.25)' : '#EAF2F0')
+const trackColor = computed(() => props.variant === 'onTeal' ? 'rgba(255,255,255,0.25)' : 'rgba(255,255,255,0.1)')
 const fillColor = computed(() => props.variant === 'onTeal' ? '#FFFFFF' : '#12B5A5')
 </script>
 

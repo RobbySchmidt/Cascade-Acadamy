@@ -1,32 +1,70 @@
 @import "tailwindcss";
 
 @theme {
-  --color-teal-600: #12B5A5;
-  --color-teal-700: #0E7A70;
-  --color-teal-500: #3AC9B0;
-  --color-teal-soft: #DFF6F3;
-  --color-teal-soft-border: #CDEDE8;
-  --color-success: #2BB673;
-  --color-success-soft: #E5F6ED;
-  --color-bg: #F3FAF8;
-  --color-surface: #FFFFFF;
-  --color-surface-alt: #FBFDFC;
-  --color-border: #DCEBE7;
-  --color-border-2: #E8F0EE;
-  --color-text: #1F2A28;
-  --color-text-muted: #6E807C;
-  --color-text-faint: #8A9794;
+  /* Teal accent */
+  --color-teal-600: #12B5A5;          /* primary fill (buttons, progress, brand) */
+  --color-teal-700: #3FD9C9;          /* teal text/links on dark (brighter for contrast) */
+  --color-teal-500: #5FE0D2;          /* eyebrows, inline code accent (teal-text-bright) */
+  --color-teal-text-bright: #5FE0D2;
+  --color-teal-soft: rgba(18,181,165,0.13);     /* soft teal bg (active nav, chips, task strip) */
+  --color-teal-soft-border: rgba(18,181,165,0.25);
+  --color-on-teal: #06201C;           /* text/icons on top of teal fills */
+
+  /* Status */
+  --color-success: #2BD68A;
+  --color-success-soft: rgba(43,214,138,0.13);
+
+  /* Surfaces (dark) */
+  --color-bg: #0B1715;                /* app background (near-black, teal-tinted) */
+  --color-surface: #11201D;           /* cards, panels, hero base */
+  --color-surface-alt: #0F1C19;       /* locked/disabled cards */
+  --color-inset: rgba(255,255,255,0.04);
+  --color-inset-2: rgba(255,255,255,0.06);
+  --color-border: rgba(255,255,255,0.08);
+  --color-border-2: rgba(255,255,255,0.12);      /* border-strong */
+
+  /* Text */
+  --color-text: #FFFFFF;              /* headings, key numbers, names */
+  --color-text-body: #E6F2EF;         /* body text, list items */
+  --color-text-muted: #9DBDB6;        /* secondary text */
+  --color-text-faint: #7FA39C;        /* tertiary/labels/meta */
 
   --font-display: "Bricolage Grotesque", sans-serif;
   --font-sans: "Plus Jakarta Sans", sans-serif;
   --font-mono: "JetBrains Mono", monospace;
 
   --radius-pill: 999px;
-  --shadow-card: 0 10px 24px -18px rgba(31,42,40,0.22);
-  --shadow-elevated: 0 18px 50px -22px rgba(31,42,40,0.22);
-  --shadow-btn: 0 8px 18px -8px rgba(18,181,165,0.9);
+  /* On dark, borders do the elevation work — shadows kept subtle, teal glow on accents */
+  --shadow-card: 0 14px 30px -22px rgba(0,0,0,0.6);
+  --shadow-elevated: 0 24px 60px -26px rgba(0,0,0,0.7);
+  --shadow-btn: 0 12px 26px -10px rgba(18,181,165,0.75);
 }
 
-:root { font-family: var(--font-sans); color: var(--color-text); }
-body { background: var(--color-bg); margin: 0; }
-h1,h2,h3 { font-family: var(--font-display); letter-spacing: -0.3px; }
+:root { font-family: var(--font-sans); color: var(--color-text-body); }
+body { background: var(--color-bg); color: var(--color-text-body); margin: 0; }
+h1,h2,h3 { font-family: var(--font-display); letter-spacing: -0.3px; color: var(--color-text); }
+
+/* Pointer cursor on anything clickable. In @layer base so that explicit
+   cursor-* utilities (cursor-not-allowed / cursor-default) always win. */
+@layer base {
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]),
+  a[href],
+  label[for],
+  summary {
+    cursor: pointer;
+  }
+}
+
+/* Page transition (app.pageTransition name="page", mode="out-in") */
+.page-enter-active,
+.page-leave-active { transition: opacity 0.24s ease, transform 0.24s ease; }
+.page-enter-from { opacity: 0; transform: translateY(10px); }
+.page-leave-to { opacity: 0; transform: translateY(-10px); }
+
+@media (prefers-reduced-motion: reduce) {
+  .page-enter-active,
+  .page-leave-active { transition: none; }
+  .page-enter-from,
+  .page-leave-to { transform: none; }
+}

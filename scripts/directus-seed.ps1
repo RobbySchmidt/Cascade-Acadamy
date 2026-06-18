@@ -95,77 +95,71 @@ $user2 = New-Item 'cascade_users' @{
 }
 Write-Host "users: $($user1.id), $($user2.id)"
 
-# --- courses ---
-$cGrund = New-Item 'cascade_courses' @{
-  title='CSS-Grundlagen'; slug='css-grundlagen'; level='Anfänger'; status='active'; sort=1
-  description='Von Selektoren bis Box-Modell: die Basics, mit denen du jede Webseite stylen kannst.'
-}
-$cFlex = New-Item 'cascade_courses' @{
-  title='Flexbox & Layout'; slug='flexbox-layout'; level='Mittel'; status='locked'; sort=2
-  unlock_hint='Schließe CSS-Grundlagen ab'; description='Moderne Layouts mit Flexbox.'
-}
-$cAnim = New-Item 'cascade_courses' @{
-  title='Animationen'; slug='animationen'; level='Fortgeschritten'; status='locked'; sort=3
-  unlock_hint='Bald verfügbar'; description='Bewegung und Übergänge mit CSS.'
-}
-$grundId = $cGrund.id
-Write-Host "courses: $grundId, $($cFlex.id), $($cAnim.id)"
+# --- courses, chapters & lessons (from courses.json + per-course lesson files) ---
+$courseDefs = [System.IO.File]::ReadAllText((Join-Path $PSScriptRoot 'courses.json'), [System.Text.Encoding]::UTF8) | ConvertFrom-Json
+$courseIdBySlug   = @{}
+$cssLessonIdBySort = @{}   # only needed for the CSS-Grundlagen sample progress
+$totalChapters = 0
+$totalLessons  = 0
 
-# --- chapters (under css-grundlagen) ---
-$chapterMap = @{}
-$chapterDefs = @(
-  @{ title='Selektoren & Grundlagen'; sort=1 },
-  @{ title='Text & Schrift';          sort=2 },
-  @{ title='Box-Modell';              sort=3 },
-  @{ title='Hintergrund & Abschluss'; sort=4 }
-)
-foreach ($cd in $chapterDefs) {
-  $ch = New-Item 'cascade_chapters' @{ course=$grundId; title=$cd.title; sort=$cd.sort }
-  $chapterMap[$cd.title] = $ch.id
-}
-Write-Host "chapters: $($chapterMap.Values -join ', ')"
-
-# --- lessons (from lessons.json) ---
-$lessonsPath = Join-Path $PSScriptRoot 'lessons.json'
-# Read explicitly as UTF-8 so German umlauts in the lesson content stay intact.
-$lessons = [System.IO.File]::ReadAllText($lessonsPath, [System.Text.Encoding]::UTF8) | ConvertFrom-Json
-$lessonIdBySort = @{}
-foreach ($l in $lessons) {
-  $chId = $chapterMap[$l.chapter]
-  if (-not $chId) { throw "No chapter id for '$($l.chapter)'" }
-  $obj = @{
-    chapter     = $chId
-    course      = $grundId
-    title       = $l.title
-    type        = $l.type
-    task        = $l.task
-    html        = $l.html
-    css_starter = $l.css_starter
-    solution    = $l.solution
-    hint        = $l.hint
-    assertions  = $l.assertions   # stays a JSON array via ConvertTo-Json -Depth
-    sort        = $l.sort
+foreach ($cdef in $courseDefs) {
+  $course = New-Item 'cascade_courses' @{
+    title       = $cdef.title
+    slug        = $cdef.slug
+    level       = $cdef.level
+    status      = $cdef.status
+    sort        = $cdef.sort
+    description = $cdef.description
   }
-  $row = New-Item 'cascade_lessons' $obj
-  $lessonIdBySort[[int]$l.sort] = $row.id
-}
-Write-Host "lessons inserted: $($lessonIdBySort.Count)"
+  $courseIdBySlug[$cdef.slug] = $course.id
 
-# --- sample progress for testuser-1: lessons sort 1..5 ---
+  # Read lessons (UTF-8 so German umlauts stay intact); chapters in first-seen order.
+  $lessons = [System.IO.File]::ReadAllText((Join-Path $PSScriptRoot $cdef.lessonsFile), [System.Text.Encoding]::UTF8) | ConvertFrom-Json
+  $chapterMap = @{}
+  $chapterSort = 1
+  foreach ($l in $lessons) {
+    if (-not $chapterMap.ContainsKey($l.chapter)) {
+      $ch = New-Item 'cascade_chapters' @{ course=$course.id; title=$l.chapter; sort=$chapterSort }
+      $chapterMap[$l.chapter] = $ch.id
+      $chapterSort++
+      $totalChapters++
+    }
+  }
+  foreach ($l in $lessons) {
+    $row = New-Item 'cascade_lessons' @{
+      chapter     = $chapterMap[$l.chapter]
+      course      = $course.id
+      title       = $l.title
+      type        = $l.type
+      task        = $l.task
+      html        = $l.html
+      css_starter = $l.css_starter
+      solution    = $l.solution
+      hint        = $l.hint
+      assertions  = $l.assertions   # stays a JSON array via ConvertTo-Json -Depth
+      sort        = $l.sort
+    }
+    if ($cdef.slug -eq 'css-grundlagen') { $cssLessonIdBySort[[int]$l.sort] = $row.id }
+    $totalLessons++
+  }
+  Write-Host ("course '{0}': {1} chapters, {2} lessons" -f $cdef.slug, $chapterMap.Count, $lessons.Count)
+}
+
+# --- sample progress for testuser-1: CSS-Grundlagen lessons sort 1..5 ---
 $now = (Get-Date).ToString('yyyy-MM-ddTHH:mm:ss')
+$grundId = $courseIdBySlug['css-grundlagen']
 $progressCount = 0
 foreach ($s in 1,2,3,4,5) {
-  $lid = $lessonIdBySort[$s]
   New-Item 'cascade_progress' @{
-    user=$user1.id; lesson=$lid; course=$grundId; status='done'; completed_at=$now
+    user=$user1.id; lesson=$cssLessonIdBySort[$s]; course=$grundId; status='done'; completed_at=$now
   } | Out-Null
   $progressCount++
 }
 
 Write-Host "----"
 Write-Host "users:    2"
-Write-Host "courses:  3"
-Write-Host "chapters: $($chapterMap.Count)"
-Write-Host "lessons:  $($lessonIdBySort.Count)"
+Write-Host "courses:  $($courseDefs.Count)"
+Write-Host "chapters: $totalChapters"
+Write-Host "lessons:  $totalLessons"
 Write-Host "progress: $progressCount"
 Write-Host "seed done"

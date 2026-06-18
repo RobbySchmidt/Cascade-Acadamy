@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { Check } from 'lucide-vue-next'
+
 interface CheckResult {
   selector: string
   prop: string
@@ -18,11 +20,11 @@ const passedCount = computed(() => props.results.filter(r => r.passed).length)
 </script>
 
 <template>
-  <div class="bg-bg" style="border-radius: 14px; padding: 16px 18px">
+  <div class="bg-inset border border-border" style="border-radius: 14px; padding: 16px 18px">
     <!-- header -->
     <div class="flex items-center justify-between" style="margin-bottom: 12px">
       <span
-        class="font-semibold uppercase text-text-faint"
+        class="font-semibold uppercase text-text"
         style="font-size: 11.5px; letter-spacing: 1px"
       >Prüfung</span>
       <span class="font-medium text-text-muted" style="font-size: 13px">
@@ -41,17 +43,19 @@ const passedCount = computed(() => props.results.filter(r => r.passed).length)
         <!-- circle -->
         <span
           v-if="r.passed"
-          class="flex shrink-0 items-center justify-center rounded-full text-white"
-          style="width: 19px; height: 19px; background: #2BB673; font-size: 11px"
-        >✓</span>
+          class="flex shrink-0 items-center justify-center rounded-full text-on-teal"
+          style="width: 19px; height: 19px; background: #2BD68A"
+        ><Check :size="12" :stroke-width="3" /></span>
         <span
           v-else
           class="shrink-0 rounded-full"
-          style="width: 19px; height: 19px; border: 2px solid #CBD5D1; box-sizing: border-box"
+          style="width: 19px; height: 19px; border: 2px solid rgba(255,255,255,0.12); box-sizing: border-box"
         />
 
-        <span :class="r.passed ? 'text-text' : 'text-text-muted'">
-          {{ r.selector }} · {{ r.prop }}: {{ r.expected }}
+        <!-- Until a criterion passes we reveal only WHAT is checked (selector · prop),
+             not the expected value — otherwise the panel would hand out the answer. -->
+        <span :class="r.passed ? 'text-text-body' : 'text-text-muted'">
+          {{ r.selector }} · {{ r.prop }}<template v-if="r.passed">: {{ r.expected }}</template>
         </span>
       </div>
 
@@ -65,7 +69,7 @@ const passedCount = computed(() => props.results.filter(r => r.passed).length)
     <!-- button -->
     <button
       type="button"
-      class="w-full rounded-[10px] bg-teal-600 font-semibold text-white transition-colors hover:bg-teal-700"
+      class="w-full rounded-[10px] bg-teal-600 font-semibold text-on-teal transition-colors hover:bg-teal-700"
       style="padding: 11px 16px; font-size: 14px"
       @click="emit('check')"
     >Code prüfen</button>

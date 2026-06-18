@@ -1,0 +1,208 @@
+[
+  {
+    "chapter": "Flexbox-Grundlagen",
+    "sort": 1,
+    "title": "Was ist Flexbox?",
+    "type": "lesen",
+    "task": "Flexbox ordnet die Kinder eines Containers entlang einer Achse an – ideal für Navigationen, Button-Gruppen oder Karten. Mit `display: flex` machst du ein Element zum Flex-Container; seine direkten Kinder werden zu Flex-Items und legen sich nebeneinander. In diesem Kurs lernst du, sie auszurichten und zu verteilen.",
+    "html": "<style>.container{display:flex;gap:12px;background:#0F1C19;border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:12px}.item{background:#12B5A5;color:#06201C;padding:16px 22px;border-radius:8px;font-weight:700}</style>\n<div class=\"container\">\n  <div class=\"item\">1</div>\n  <div class=\"item\">2</div>\n  <div class=\"item\">3</div>\n</div>",
+    "css_starter": "",
+    "assertions": [],
+    "hint": "",
+    "solution": ""
+  },
+  {
+    "chapter": "Flexbox-Grundlagen",
+    "sort": 2,
+    "title": "Container aktivieren",
+    "type": "uebung",
+    "task": "Mach den Container zum Flex-Container: Gib `.container` ein `display` von `flex`. Schon ordnen sich die Kinder nebeneinander an.",
+    "html": "<style>.container{background:#0F1C19;border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:12px}.item{background:#12B5A5;color:#06201C;padding:16px 22px;border-radius:8px;font-weight:700;margin:4px}</style>\n<div class=\"container\">\n  <div class=\"item\">1</div>\n  <div class=\"item\">2</div>\n  <div class=\"item\">3</div>\n</div>",
+    "css_starter": ".container {\n  \n}",
+    "assertions": [
+      { "selector": ".container", "prop": "display", "expected": "flex" }
+    ],
+    "hint": "`display: flex` macht aus einem Element einen Flex-Container – seine direkten Kinder ordnen sich dann entlang einer Achse an.",
+    "solution": ".container {\n  display: flex;\n}"
+  },
+  {
+    "chapter": "Flexbox-Grundlagen",
+    "sort": 3,
+    "title": "Richtung bestimmen",
+    "type": "uebung",
+    "task": "Mit `flex-direction` bestimmst du die Richtung der Hauptachse. Der Container ist schon ein Flex-Container – stell die Richtung mit `flex-direction` auf `column`, damit die Items untereinander stehen.",
+    "html": "<style>.container{background:#0F1C19;border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:12px}.item{background:#12B5A5;color:#06201C;padding:12px 22px;border-radius:8px;font-weight:700;margin:4px}</style>\n<div class=\"container\">\n  <div class=\"item\">1</div>\n  <div class=\"item\">2</div>\n  <div class=\"item\">3</div>\n</div>",
+    "css_starter": ".container {\n  display: flex;\n  \n}",
+    "assertions": [
+      { "selector": ".container", "prop": "flex-direction", "expected": "column" }
+    ],
+    "hint": "`flex-direction` legt fest, ob die Items in einer Zeile (`row`) oder Spalte (`column`) liegen.",
+    "solution": ".container {\n  display: flex;\n  flex-direction: column;\n}"
+  },
+  {
+    "chapter": "Flexbox-Grundlagen",
+    "sort": 4,
+    "title": "Abstände mit gap",
+    "type": "uebung",
+    "task": "`gap` setzt den Abstand zwischen den Flex-Items – ganz ohne `margin`. Gib dem Container einen `gap` von `16px`.",
+    "html": "<style>.container{display:flex;background:#0F1C19;border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:12px}.item{background:#12B5A5;color:#06201C;padding:16px 22px;border-radius:8px;font-weight:700}</style>\n<div class=\"container\">\n  <div class=\"item\">1</div>\n  <div class=\"item\">2</div>\n  <div class=\"item\">3</div>\n</div>",
+    "css_starter": ".container {\n  display: flex;\n  \n}",
+    "assertions": [
+      { "selector": ".container", "prop": "gap", "expected": "16px" }
+    ],
+    "hint": "`gap` erzeugt gleichmäßige Abstände zwischen den Items – ohne dass du jedem Item einen `margin` geben musst.",
+    "solution": ".container {\n  display: flex;\n  gap: 16px;\n}"
+  },
+  {
+    "chapter": "Ausrichtung",
+    "sort": 5,
+    "title": "Haupt- & Querachse",
+    "type": "lesen",
+    "task": "Flexbox hat zwei Achsen: die Hauptachse (in Richtung von `flex-direction`) und die Querachse quer dazu. `justify-content` verteilt die Items entlang der Hauptachse, `align-items` richtet sie auf der Querachse aus. Diese beiden Eigenschaften lernst du als Nächstes.",
+    "html": "<style>.container{display:flex;justify-content:center;align-items:center;gap:12px;height:130px;background:#0F1C19;border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:12px}.item{background:#12B5A5;color:#06201C;padding:16px 22px;border-radius:8px;font-weight:700}</style>\n<div class=\"container\">\n  <div class=\"item\">1</div>\n  <div class=\"item\">2</div>\n</div>",
+    "css_starter": "",
+    "assertions": [],
+    "hint": "",
+    "solution": ""
+  },
+  {
+    "chapter": "Ausrichtung",
+    "sort": 6,
+    "title": "Horizontal verteilen",
+    "type": "uebung",
+    "task": "`justify-content` verteilt die Items entlang der Hauptachse. Zentriere die Items horizontal: `justify-content` mit dem Wert `center`.",
+    "html": "<style>.container{display:flex;gap:10px;background:#0F1C19;border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:12px}.item{background:#12B5A5;color:#06201C;padding:14px 20px;border-radius:8px;font-weight:700}</style>\n<div class=\"container\">\n  <div class=\"item\">1</div>\n  <div class=\"item\">2</div>\n</div>",
+    "css_starter": ".container {\n  display: flex;\n  \n}",
+    "assertions": [
+      { "selector": ".container", "prop": "justify-content", "expected": "center" }
+    ],
+    "hint": "`justify-content` steuert die Verteilung auf der Hauptachse – z. B. `center`, `flex-end` oder `space-between`.",
+    "solution": ".container {\n  display: flex;\n  justify-content: center;\n}"
+  },
+  {
+    "chapter": "Ausrichtung",
+    "sort": 7,
+    "title": "Vertikal ausrichten",
+    "type": "uebung",
+    "task": "`align-items` richtet die Items auf der Querachse aus. Der Container ist 140px hoch – zentriere die Items vertikal mit `align-items`: Wert `center`.",
+    "html": "<style>.container{display:flex;gap:10px;background:#0F1C19;border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:12px}.item{background:#12B5A5;color:#06201C;padding:14px 20px;border-radius:8px;font-weight:700}</style>\n<div class=\"container\">\n  <div class=\"item\">1</div>\n  <div class=\"item\">2</div>\n</div>",
+    "css_starter": ".container {\n  display: flex;\n  height: 140px;\n  \n}",
+    "assertions": [
+      { "selector": ".container", "prop": "align-items", "expected": "center" }
+    ],
+    "hint": "`align-items` richtet die Items quer zur Hauptachse aus – bei einer Zeile also vertikal.",
+    "solution": ".container {\n  display: flex;\n  height: 140px;\n  align-items: center;\n}"
+  },
+  {
+    "chapter": "Ausrichtung",
+    "sort": 8,
+    "title": "Platz dazwischen",
+    "type": "uebung",
+    "task": "Mit `space-between` schiebt `justify-content` das erste und letzte Item an die Ränder und verteilt den restlichen Platz gleichmäßig dazwischen. Setze `justify-content` auf `space-between`.",
+    "html": "<style>.container{display:flex;background:#0F1C19;border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:12px}.item{background:#12B5A5;color:#06201C;padding:14px 20px;border-radius:8px;font-weight:700}</style>\n<div class=\"container\">\n  <div class=\"item\">Logo</div>\n  <div class=\"item\">Menü</div>\n</div>",
+    "css_starter": ".container {\n  display: flex;\n  \n}",
+    "assertions": [
+      { "selector": ".container", "prop": "justify-content", "expected": "space-between" }
+    ],
+    "hint": "`space-between` verteilt den freien Platz zwischen die Items – ideal für Navigationsleisten.",
+    "solution": ".container {\n  display: flex;\n  justify-content: space-between;\n}"
+  },
+  {
+    "chapter": "Flex-Items steuern",
+    "sort": 9,
+    "title": "Wie Items sich verteilen",
+    "type": "lesen",
+    "task": "Flex-Items können sich den verfügbaren Platz teilen. `flex-grow` bestimmt, ob ein Item wächst, `flex-basis` seine Grundbreite, und `align-self` richtet ein einzelnes Item abweichend aus. Diese Werkzeuge schaust du dir als Nächstes an.",
+    "html": "<style>.container{display:flex;gap:10px;background:#0F1C19;border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:12px}.grow{flex-grow:1;background:#12B5A5;color:#06201C;padding:16px;border-radius:8px;font-weight:700}.fix{background:#1E332E;color:#9DBDB6;padding:16px;border-radius:8px;font-weight:700}</style>\n<div class=\"container\">\n  <div class=\"grow\">flex-grow: 1</div>\n  <div class=\"fix\">fix</div>\n</div>",
+    "css_starter": "",
+    "assertions": [],
+    "hint": "",
+    "solution": ""
+  },
+  {
+    "chapter": "Flex-Items steuern",
+    "sort": 10,
+    "title": "Wachsen mit flex-grow",
+    "type": "uebung",
+    "task": "`flex-grow` gibt an, wie stark ein Item den freien Platz aufnimmt. Lass das Item mit der Klasse `item` wachsen: `flex-grow` von `1`.",
+    "html": "<style>.container{display:flex;gap:10px;background:#0F1C19;border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:12px}.item{background:#12B5A5;color:#06201C;padding:16px;border-radius:8px;font-weight:700}.box{background:#1E332E;color:#9DBDB6;padding:16px;border-radius:8px;font-weight:700}</style>\n<div class=\"container\">\n  <div class=\"item\">wächst</div>\n  <div class=\"box\">fix</div>\n  <div class=\"box\">fix</div>\n</div>",
+    "css_starter": ".item {\n  \n}",
+    "assertions": [
+      { "selector": ".item", "prop": "flex-grow", "expected": "1" }
+    ],
+    "hint": "`flex-grow: 1` lässt ein Item den übrigen Platz ausfüllen; `0` (Standard) hält es bei seiner Größe.",
+    "solution": ".item {\n  flex-grow: 1;\n}"
+  },
+  {
+    "chapter": "Flex-Items steuern",
+    "sort": 11,
+    "title": "Grundbreite flex-basis",
+    "type": "uebung",
+    "task": "`flex-basis` legt die Grundbreite eines Items entlang der Hauptachse fest. Gib dem `.item` eine `flex-basis` von `200px`.",
+    "html": "<style>.container{display:flex;gap:10px;background:#0F1C19;border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:12px}.item{background:#12B5A5;color:#06201C;padding:16px;border-radius:8px;font-weight:700}.box{background:#1E332E;color:#9DBDB6;padding:16px;border-radius:8px;font-weight:700}</style>\n<div class=\"container\">\n  <div class=\"item\">200px breit</div>\n  <div class=\"box\">Rest</div>\n</div>",
+    "css_starter": ".item {\n  \n}",
+    "assertions": [
+      { "selector": ".item", "prop": "flex-basis", "expected": "200px" }
+    ],
+    "hint": "`flex-basis` ist die Ausgangsgröße eines Items, bevor `flex-grow` oder `flex-shrink` wirken.",
+    "solution": ".item {\n  flex-basis: 200px;\n}"
+  },
+  {
+    "chapter": "Flex-Items steuern",
+    "sort": 12,
+    "title": "Einzeln ausrichten",
+    "type": "uebung",
+    "task": "Mit `align-self` richtest du ein einzelnes Item abweichend von `align-items` aus. Schiebe das `.item` auf der Querachse ans Ende: `align-self` von `flex-end`.",
+    "html": "<style>.container{display:flex;align-items:flex-start;gap:10px;height:140px;background:#0F1C19;border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:12px}.item{background:#12B5A5;color:#06201C;padding:16px;border-radius:8px;font-weight:700}.box{background:#1E332E;color:#9DBDB6;padding:16px;border-radius:8px;font-weight:700}</style>\n<div class=\"container\">\n  <div class=\"item\">ich nach unten</div>\n  <div class=\"box\">oben</div>\n</div>",
+    "css_starter": ".item {\n  \n}",
+    "assertions": [
+      { "selector": ".item", "prop": "align-self", "expected": "flex-end" }
+    ],
+    "hint": "`align-self` überschreibt `align-items` für genau ein Item.",
+    "solution": ".item {\n  align-self: flex-end;\n}"
+  },
+  {
+    "chapter": "Flex-Items steuern",
+    "sort": 13,
+    "title": "Reihenfolge mit order",
+    "type": "uebung",
+    "task": "`order` ändert die visuelle Reihenfolge der Items, ohne das HTML zu verändern. Gib dem `.item` ein `order` von `2`, damit es nach hinten rutscht.",
+    "html": "<style>.container{display:flex;gap:10px;background:#0F1C19;border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:12px}.item{background:#12B5A5;color:#06201C;padding:16px;border-radius:8px;font-weight:700}.box{background:#1E332E;color:#9DBDB6;padding:16px;border-radius:8px;font-weight:700}</style>\n<div class=\"container\">\n  <div class=\"item\">ich (zuerst im HTML)</div>\n  <div class=\"box\">B</div>\n  <div class=\"box\">C</div>\n</div>",
+    "css_starter": ".item {\n  \n}",
+    "assertions": [
+      { "selector": ".item", "prop": "order", "expected": "2" }
+    ],
+    "hint": "Items werden nach ihrem `order`-Wert sortiert (Standard `0`) – ein höherer Wert landet weiter hinten.",
+    "solution": ".item {\n  order: 2;\n}"
+  },
+  {
+    "chapter": "Umbruch & Abschluss",
+    "sort": 14,
+    "title": "Umbruch mit flex-wrap",
+    "type": "uebung",
+    "task": "Standardmäßig zwängt Flexbox alle Items in eine Zeile. Mit `flex-wrap: wrap` dürfen sie bei Platzmangel in die nächste Zeile umbrechen. Setze `flex-wrap` auf `wrap`.",
+    "html": "<style>.container{display:flex;gap:8px;width:240px;background:#0F1C19;border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:10px}.item{background:#12B5A5;color:#06201C;padding:14px 22px;border-radius:8px;font-weight:700}</style>\n<div class=\"container\">\n  <div class=\"item\">A</div>\n  <div class=\"item\">B</div>\n  <div class=\"item\">C</div>\n  <div class=\"item\">D</div>\n</div>",
+    "css_starter": ".container {\n  display: flex;\n  \n}",
+    "assertions": [
+      { "selector": ".container", "prop": "flex-wrap", "expected": "wrap" }
+    ],
+    "hint": "`flex-wrap: wrap` erlaubt den Zeilenumbruch; `nowrap` (Standard) erzwingt eine einzige Zeile.",
+    "solution": ".container {\n  display: flex;\n  flex-wrap: wrap;\n}"
+  },
+  {
+    "chapter": "Umbruch & Abschluss",
+    "sort": 15,
+    "title": "Mini-Projekt: Navigationsleiste",
+    "type": "uebung",
+    "task": "Zeit für eine echte Navigationsleiste! Style die `.navbar`: mach sie zum Flex-Container (`display: flex`), schiebe Logo und Links mit `justify-content` auf `space-between` auseinander und richte sie mit `align-items` auf `center` aus.",
+    "html": "<style>.navbar{background:#11201D;border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:14px 18px}.brand{color:#fff;font-weight:800;font-size:18px}.links{display:flex;gap:16px}.links a{color:#3FD9C9;text-decoration:none;font-weight:600}</style>\n<nav class=\"navbar\">\n  <span class=\"brand\">Cascade</span>\n  <div class=\"links\"><a>Kurse</a><a>Profil</a></div>\n</nav>",
+    "css_starter": ".navbar {\n  \n}",
+    "assertions": [
+      { "selector": ".navbar", "prop": "display", "expected": "flex" },
+      { "selector": ".navbar", "prop": "justify-content", "expected": "space-between" },
+      { "selector": ".navbar", "prop": "align-items", "expected": "center" }
+    ],
+    "hint": "Eine Navbar ist der Klassiker: `display: flex` + `justify-content: space-between` (Logo links, Links rechts) + `align-items: center` (vertikal mittig).",
+    "solution": ".navbar {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n}"
+  }
+]

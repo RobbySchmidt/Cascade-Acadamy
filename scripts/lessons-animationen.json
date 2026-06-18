@@ -1,0 +1,210 @@
+[
+  {
+    "chapter": "Übergänge (Transitions)",
+    "sort": 1,
+    "title": "Was sind Transitions?",
+    "type": "lesen",
+    "task": "Eine Transition animiert die Veränderung einer Eigenschaft – statt abrupt zu springen, gleitet der Wert weich von alt zu neu, z. B. beim Überfahren mit der Maus (`:hover`). Du steuerst, welche Eigenschaft (`transition-property`), wie lange (`transition-duration`) und mit welcher Tempo-Kurve (`transition-timing-function`). Fahr mit der Maus über den Button unten – die Farbe wechselt weich.",
+    "html": "<style>.btn{background:#12B5A5;color:#06201C;padding:14px 28px;border-radius:10px;font-weight:700;border:none;font-size:15px;cursor:pointer;transition:background-color 0.3s ease}.btn:hover{background:#3FD9C9}</style>\n<button class=\"btn\">Fahr über mich</button>",
+    "css_starter": "",
+    "assertions": [],
+    "hint": "",
+    "solution": ""
+  },
+  {
+    "chapter": "Übergänge (Transitions)",
+    "sort": 2,
+    "title": "Übergangsdauer",
+    "type": "uebung",
+    "task": "`transition-duration` bestimmt, wie lange ein Übergang dauert. Gib dem `.btn` eine `transition-duration` von `0.3s`. (Fahr danach mit der Maus über den Button – die Farbe gleitet jetzt weich.)",
+    "html": "<style>.btn{background:#12B5A5;color:#06201C;padding:14px 28px;border-radius:10px;font-weight:700;border:none;font-size:15px;cursor:pointer}.btn:hover{background:#3FD9C9}</style>\n<button class=\"btn\">Fahr über mich</button>",
+    "css_starter": ".btn {\n  \n}",
+    "assertions": [
+      { "selector": ".btn", "prop": "transition-duration", "expected": "0.3s" }
+    ],
+    "hint": "`transition-duration` ist die Dauer des Übergangs – z. B. `0.3s` für ein flottes, weiches Gleiten.",
+    "solution": ".btn {\n  transition-duration: 0.3s;\n}"
+  },
+  {
+    "chapter": "Übergänge (Transitions)",
+    "sort": 3,
+    "title": "Tempo-Kurve",
+    "type": "uebung",
+    "task": "Die `transition-timing-function` bestimmt das Tempo über die Zeit – ob der Übergang gleichmäßig läuft oder sanft startet und endet. Setze `transition-timing-function` auf `ease-in-out`.",
+    "html": "<style>.btn{background:#12B5A5;color:#06201C;padding:14px 28px;border-radius:10px;font-weight:700;border:none;font-size:15px;cursor:pointer}.btn:hover{background:#3FD9C9}</style>\n<button class=\"btn\">Fahr über mich</button>",
+    "css_starter": ".btn {\n  transition-duration: 0.4s;\n  \n}",
+    "assertions": [
+      { "selector": ".btn", "prop": "transition-timing-function", "expected": "ease-in-out" }
+    ],
+    "hint": "`ease-in-out` startet und endet sanft; andere Werte sind z. B. `linear` oder `ease`.",
+    "solution": ".btn {\n  transition-duration: 0.4s;\n  transition-timing-function: ease-in-out;\n}"
+  },
+  {
+    "chapter": "Übergänge (Transitions)",
+    "sort": 4,
+    "title": "Was animiert wird",
+    "type": "uebung",
+    "task": "`transition-property` legt fest, welche Eigenschaft animiert wird. Standardmäßig sind es alle (`all`). Beschränke den Übergang auf die Hintergrundfarbe: `transition-property` von `background-color`.",
+    "html": "<style>.btn{background:#12B5A5;color:#06201C;padding:14px 28px;border-radius:10px;font-weight:700;border:none;font-size:15px;cursor:pointer}.btn:hover{background:#3FD9C9}</style>\n<button class=\"btn\">Fahr über mich</button>",
+    "css_starter": ".btn {\n  transition-duration: 0.3s;\n  \n}",
+    "assertions": [
+      { "selector": ".btn", "prop": "transition-property", "expected": "background-color" }
+    ],
+    "hint": "`transition-property` nennt die zu animierende Eigenschaft (z. B. `background-color`); `all` (Standard) animiert alles.",
+    "solution": ".btn {\n  transition-duration: 0.3s;\n  transition-property: background-color;\n}"
+  },
+  {
+    "chapter": "Sichtbarkeit & Cursor",
+    "sort": 5,
+    "title": "Durchsichtigkeit",
+    "type": "uebung",
+    "task": "`opacity` steuert die Durchsichtigkeit eines Elements: `1` ist voll sichtbar, `0` unsichtbar. Mach die `.box` halb durchsichtig: `opacity` von `0.5`.",
+    "html": "<style>body{background:#0F1C19}.box{display:inline-block;background:#12B5A5;color:#06201C;padding:24px 30px;border-radius:12px;font-weight:700}</style>\n<div class=\"box\">halb durchsichtig</div>",
+    "css_starter": ".box {\n  \n}",
+    "assertions": [
+      { "selector": ".box", "prop": "opacity", "expected": "0.5" }
+    ],
+    "hint": "`opacity` reicht von `1` (voll sichtbar) bis `0` (unsichtbar); `0.5` ist halbtransparent.",
+    "solution": ".box {\n  opacity: 0.5;\n}"
+  },
+  {
+    "chapter": "Sichtbarkeit & Cursor",
+    "sort": 6,
+    "title": "Mauszeiger",
+    "type": "uebung",
+    "task": "Mit `cursor` änderst du, wie der Mauszeiger über einem Element aussieht. Bei klickbaren Elementen signalisiert `cursor: pointer` (das Hand-Symbol) Interaktivität. Gib dem `.btn` einen `cursor` von `pointer`.",
+    "html": "<style>.btn{background:#12B5A5;color:#06201C;padding:14px 28px;border-radius:10px;font-weight:700;border:none;font-size:15px}</style>\n<button class=\"btn\">Zeig die Hand</button>",
+    "css_starter": ".btn {\n  \n}",
+    "assertions": [
+      { "selector": ".btn", "prop": "cursor", "expected": "pointer" }
+    ],
+    "hint": "`cursor: pointer` zeigt die Hand und signalisiert: hier kann man klicken.",
+    "solution": ".btn {\n  cursor: pointer;\n}"
+  },
+  {
+    "chapter": "Sichtbarkeit & Cursor",
+    "sort": 7,
+    "title": "Transforms",
+    "type": "lesen",
+    "task": "`transform` verändert ein Element visuell, ohne das Layout zu beeinflussen: `translate()` verschiebt, `scale()` vergrößert oder verkleinert, `rotate()` dreht. Oft kombiniert man Transforms mit Transitions, damit z. B. ein Button beim Überfahren sanft wächst. Probier es aus – fahr über die Box unten.",
+    "html": "<style>.box{display:inline-block;background:#12B5A5;color:#06201C;padding:24px 30px;border-radius:12px;font-weight:700;cursor:pointer;transition:transform 0.3s ease}.box:hover{transform:scale(1.15) rotate(-3deg)}</style>\n<div class=\"box\">Fahr über mich</div>",
+    "css_starter": "",
+    "assertions": [],
+    "hint": "",
+    "solution": ""
+  },
+  {
+    "chapter": "Keyframe-Animationen",
+    "sort": 8,
+    "title": "Was sind @keyframes?",
+    "type": "lesen",
+    "task": "Während Transitions nur zwischen zwei Zuständen animieren, beschreibst du mit `@keyframes` eine ganze Bewegungsfolge: `from` (Start), `to` (Ende) oder Prozentschritte dazwischen. Mit `animation-name` weist du die Keyframes einem Element zu, mit `animation-duration` legst du das Tempo fest. Die Box unten schwebt dank einer Keyframe-Animation endlos auf und ab.",
+    "html": "<style>@keyframes float{from{transform:translateY(0)}to{transform:translateY(-14px)}}.box{display:inline-block;background:#12B5A5;color:#06201C;padding:22px 28px;border-radius:12px;font-weight:700;animation:float 1.2s ease-in-out infinite alternate}</style>\n<div class=\"box\">ich schwebe</div>",
+    "css_starter": "",
+    "assertions": [],
+    "hint": "",
+    "solution": ""
+  },
+  {
+    "chapter": "Keyframe-Animationen",
+    "sort": 9,
+    "title": "Animation benennen",
+    "type": "uebung",
+    "task": "Die `@keyframes`-Regel `float` ist oben schon definiert. Weise sie der `.box` zu: `animation-name` von `float`. (Sichtbar wird die Animation erst mit einer Dauer – die kommt in der nächsten Lektion.)",
+    "html": "<style>.box{display:inline-block;background:#12B5A5;color:#06201C;padding:22px 28px;border-radius:12px;font-weight:700}</style>\n<div class=\"box\">Box</div>",
+    "css_starter": "@keyframes float {\n  from { transform: translateY(0); }\n  to { transform: translateY(-14px); }\n}\n\n.box {\n  \n}",
+    "assertions": [
+      { "selector": ".box", "prop": "animation-name", "expected": "float" }
+    ],
+    "hint": "`animation-name` verbindet ein Element mit einer `@keyframes`-Regel gleichen Namens.",
+    "solution": "@keyframes float {\n  from { transform: translateY(0); }\n  to { transform: translateY(-14px); }\n}\n\n.box {\n  animation-name: float;\n}"
+  },
+  {
+    "chapter": "Keyframe-Animationen",
+    "sort": 10,
+    "title": "Dauer festlegen",
+    "type": "uebung",
+    "task": "`animation-duration` bestimmt, wie lange ein Durchlauf der Animation dauert. Gib der `.box` eine `animation-duration` von `2s`.",
+    "html": "<style>.box{display:inline-block;background:#12B5A5;color:#06201C;padding:22px 28px;border-radius:12px;font-weight:700}</style>\n<div class=\"box\">Box</div>",
+    "css_starter": "@keyframes float {\n  from { transform: translateY(0); }\n  to { transform: translateY(-14px); }\n}\n\n.box {\n  animation-name: float;\n  \n}",
+    "assertions": [
+      { "selector": ".box", "prop": "animation-duration", "expected": "2s" }
+    ],
+    "hint": "`animation-duration` ist die Dauer eines Durchlaufs – ohne sie (Standard `0s`) passiert nichts Sichtbares.",
+    "solution": "@keyframes float {\n  from { transform: translateY(0); }\n  to { transform: translateY(-14px); }\n}\n\n.box {\n  animation-name: float;\n  animation-duration: 2s;\n}"
+  },
+  {
+    "chapter": "Keyframe-Animationen",
+    "sort": 11,
+    "title": "Endlos wiederholen",
+    "type": "uebung",
+    "task": "Standardmäßig läuft eine Animation nur einmal. Mit `animation-iteration-count: infinite` wiederholt sie sich endlos. Setze `animation-iteration-count` auf `infinite` – die Box schwebt dann dauerhaft.",
+    "html": "<style>.box{display:inline-block;background:#12B5A5;color:#06201C;padding:22px 28px;border-radius:12px;font-weight:700}</style>\n<div class=\"box\">Box</div>",
+    "css_starter": "@keyframes float {\n  from { transform: translateY(0); }\n  to { transform: translateY(-14px); }\n}\n\n.box {\n  animation-name: float;\n  animation-duration: 1.5s;\n  \n}",
+    "assertions": [
+      { "selector": ".box", "prop": "animation-iteration-count", "expected": "infinite" }
+    ],
+    "hint": "`animation-iteration-count` legt fest, wie oft die Animation läuft; `infinite` bedeutet endlos.",
+    "solution": "@keyframes float {\n  from { transform: translateY(0); }\n  to { transform: translateY(-14px); }\n}\n\n.box {\n  animation-name: float;\n  animation-duration: 1.5s;\n  animation-iteration-count: infinite;\n}"
+  },
+  {
+    "chapter": "Keyframe-Animationen",
+    "sort": 12,
+    "title": "Hin & zurück",
+    "type": "uebung",
+    "task": "`animation-direction: alternate` lässt die Animation abwechselnd vorwärts und rückwärts laufen – die Box pendelt dann sanft, statt bei jedem Durchlauf zu springen. Setze `animation-direction` auf `alternate`.",
+    "html": "<style>.box{display:inline-block;background:#12B5A5;color:#06201C;padding:22px 28px;border-radius:12px;font-weight:700}</style>\n<div class=\"box\">Box</div>",
+    "css_starter": "@keyframes float {\n  from { transform: translateY(0); }\n  to { transform: translateY(-14px); }\n}\n\n.box {\n  animation-name: float;\n  animation-duration: 1.5s;\n  animation-iteration-count: infinite;\n  \n}",
+    "assertions": [
+      { "selector": ".box", "prop": "animation-direction", "expected": "alternate" }
+    ],
+    "hint": "`animation-direction: alternate` kehrt bei jedem Durchlauf die Richtung um – die Bewegung pendelt sanft hin und zurück.",
+    "solution": "@keyframes float {\n  from { transform: translateY(0); }\n  to { transform: translateY(-14px); }\n}\n\n.box {\n  animation-name: float;\n  animation-duration: 1.5s;\n  animation-iteration-count: infinite;\n  animation-direction: alternate;\n}"
+  },
+  {
+    "chapter": "Abschluss",
+    "sort": 13,
+    "title": "Verzögerung",
+    "type": "uebung",
+    "task": "`animation-delay` wartet eine Weile, bevor die Animation startet – nützlich, um mehrere Elemente zeitversetzt zu animieren. Gib der `.box` ein `animation-delay` von `1s`.",
+    "html": "<style>.box{display:inline-block;background:#12B5A5;color:#06201C;padding:22px 28px;border-radius:12px;font-weight:700}</style>\n<div class=\"box\">Box</div>",
+    "css_starter": "@keyframes float {\n  from { transform: translateY(0); }\n  to { transform: translateY(-14px); }\n}\n\n.box {\n  animation-name: float;\n  animation-duration: 1.5s;\n  animation-iteration-count: infinite;\n  \n}",
+    "assertions": [
+      { "selector": ".box", "prop": "animation-delay", "expected": "1s" }
+    ],
+    "hint": "`animation-delay` verzögert den Start; mit verschiedenen Delays kannst du Elemente nacheinander loslaufen lassen.",
+    "solution": "@keyframes float {\n  from { transform: translateY(0); }\n  to { transform: translateY(-14px); }\n}\n\n.box {\n  animation-name: float;\n  animation-duration: 1.5s;\n  animation-iteration-count: infinite;\n  animation-delay: 1s;\n}"
+  },
+  {
+    "chapter": "Abschluss",
+    "sort": 14,
+    "title": "Kurzform animation",
+    "type": "uebung",
+    "task": "Statt vieler einzelner `animation-*`-Zeilen geht es kürzer: Die `animation`-Kurzform fasst sie zusammen. Schreibe `animation: float 2s infinite;` für die `.box` – das setzt Name, Dauer (`2s`) und Wiederholung (`infinite`) auf einmal.",
+    "html": "<style>.box{display:inline-block;background:#12B5A5;color:#06201C;padding:22px 28px;border-radius:12px;font-weight:700}</style>\n<div class=\"box\">Box</div>",
+    "css_starter": "@keyframes float {\n  from { transform: translateY(0); }\n  to { transform: translateY(-14px); }\n}\n\n.box {\n  \n}",
+    "assertions": [
+      { "selector": ".box", "prop": "animation-name", "expected": "float" },
+      { "selector": ".box", "prop": "animation-duration", "expected": "2s" },
+      { "selector": ".box", "prop": "animation-iteration-count", "expected": "infinite" }
+    ],
+    "hint": "Die `animation`-Kurzform kombiniert mehrere Werte in einer Zeile: `animation: name dauer wiederholung;`.",
+    "solution": "@keyframes float {\n  from { transform: translateY(0); }\n  to { transform: translateY(-14px); }\n}\n\n.box {\n  animation: float 2s infinite;\n}"
+  },
+  {
+    "chapter": "Abschluss",
+    "sort": 15,
+    "title": "Mini-Projekt: Pulsierender Button",
+    "type": "uebung",
+    "task": "Zum Abschluss ein lebendiger Button! Die `@keyframes pulse` (Name, Dauer und Richtung) sind schon gesetzt. Gib dem `.btn` jetzt: einen `cursor` von `pointer`, eine `transition-duration` von `0.3s` und lass ihn mit `animation-iteration-count: infinite` endlos pulsieren.",
+    "html": "<style>.btn{background:#12B5A5;color:#06201C;padding:14px 28px;border-radius:10px;font-weight:700;border:none;font-size:16px}</style>\n<button class=\"btn\">Klick mich</button>",
+    "css_starter": "@keyframes pulse {\n  from { transform: scale(1); }\n  to { transform: scale(1.08); }\n}\n\n.btn {\n  animation-name: pulse;\n  animation-duration: 1s;\n  animation-direction: alternate;\n  \n}",
+    "assertions": [
+      { "selector": ".btn", "prop": "cursor", "expected": "pointer" },
+      { "selector": ".btn", "prop": "transition-duration", "expected": "0.3s" },
+      { "selector": ".btn", "prop": "animation-iteration-count", "expected": "infinite" }
+    ],
+    "hint": "Kombiniere drei Dinge: `cursor: pointer` (Hand), `transition-duration: 0.3s` (weiche Hover-Reaktion) und `animation-iteration-count: infinite` (endloses Pulsieren).",
+    "solution": "@keyframes pulse {\n  from { transform: scale(1); }\n  to { transform: scale(1.08); }\n}\n\n.btn {\n  animation-name: pulse;\n  animation-duration: 1s;\n  animation-direction: alternate;\n  cursor: pointer;\n  transition-duration: 0.3s;\n  animation-iteration-count: infinite;\n}"
+  }
+]

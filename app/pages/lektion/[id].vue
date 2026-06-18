@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { ArrowLeft, ArrowRight, ChevronRight, Sun, Moon, X, Sparkles, Lightbulb } from 'lucide-vue-next'
+
 interface Assertion { selector: string; prop: string; expected: string }
 
 interface Lesson {
@@ -24,6 +26,7 @@ interface LessonResponse {
   index: number
   total: number
   nextLessonId: number | null
+  prevLessonId: number | null
 }
 
 const route = useRoute()
@@ -39,6 +42,7 @@ const chapterTitle = computed(() => data.value?.chapterTitle ?? '')
 const index = computed(() => data.value?.index ?? 0)
 const total = computed(() => data.value?.total ?? 0)
 const nextLessonId = computed(() => data.value?.nextLessonId ?? null)
+const prevLessonId = computed(() => data.value?.prevLessonId ?? null)
 
 const percent = computed(() => total.value ? Math.round((index.value / total.value) * 100) : 0)
 
@@ -51,6 +55,10 @@ const results = ref<CheckResult[]>([])
 const hasChecked = ref(false)
 const showHint = ref(false)
 
+// "Lösung anzeigen" toggle — back up the user's code so it can be restored.
+const solutionShown = ref(false)
+const userCssBackup = ref<string | null>(null)
+
 const preview = ref<{ getDoc: () => Document | null | undefined } | null>(null)
 
 // re-init css if the lesson data changes (e.g. navigating between lessons)
@@ -59,9 +67,15 @@ watch(() => lesson.value?.id, () => {
   results.value = []
   hasChecked.value = false
   showHint.value = false
+  solutionShown.value = false
+  userCssBackup.value = null
 })
 
 const assertions = computed<Assertion[]>(() => lesson.value?.assertions ?? [])
+
+// Reading lessons (type "lesen" / no assertions) only explain — no check or solution.
+const hasCheck = computed(() => lesson.value?.type !== 'lesen' && assertions.value.length > 0)
+const canShowSolution = computed(() => hasCheck.value && lesson.value?.solution != null)
 
 const allPassed = computed(() => {
   if (lesson.value?.type === 'lesen') return true
@@ -84,8 +98,19 @@ function runCheck() {
   hasChecked.value = true
 }
 
-function showSolution() {
-  if (lesson.value?.solution != null) css.value = lesson.value.solution
+function toggleSolution() {
+  if (!lesson.value) return
+  if (solutionShown.value) {
+    // restore the user's own code
+    css.value = userCssBackup.value ?? lesson.value.css_starter ?? ''
+    userCssBackup.value = null
+    solutionShown.value = false
+  } else {
+    if (lesson.value.solution == null) return
+    userCssBackup.value = css.value
+    css.value = lesson.value.solution
+    solutionShown.value = true
+  }
 }
 
 async function markComplete() {
@@ -107,16 +132,29 @@ async function goNext() {
   }
 }
 
+// Top arrow / ✕ close the editor back to the course detail.
 function goBack() {
   navigateTo('/kurse/' + courseSlug.value)
 }
 
+// Footer "← Zurück" steps one lesson back; on the first lesson it falls back
+// to the course detail.
+function goPrev() {
+  if (prevLessonId.value != null) {
+    navigateTo('/lektion/' + prevLessonId.value)
+  } else {
+    navigateTo('/kurse/' + courseSlug.value)
+  }
+}
+
 // split task on backticks -> alternating text / code chip
 interface TaskPart { text: string; code: boolean }
-const taskParts = computed<TaskPart[]>(() => {
-  const t = lesson.value?.task ?? ''
-  return t.split('`').map((segment, i) => ({ text: segment, code: i % 2 === 1 }))
-})
+function splitOnBackticks(text: string): TaskPart[] {
+  return text.split('`').map((segment, i) => ({ text: segment, code: i % 2 === 1 }))
+}
+
+const taskParts = computed<TaskPart[]>(() => splitOnBackticks(lesson.value?.task ?? ''))
+const hintParts = computed<TaskPart[]>(() => splitOnBackticks(lesson.value?.hint ?? ''))
 </script>
 
 <template>
@@ -124,7 +162,7 @@ const taskParts = computed<TaskPart[]>(() => {
     <!-- error -->
     <div v-if="error || !lesson" class="flex flex-col items-start" style="gap: 14px">
       <h1 class="font-display font-bold text-text" style="font-size: 26px">Lektion nicht gefunden</h1>
-      <NuxtLink to="/kurse" class="font-semibold text-teal-700 no-underline">← Alle Kurse</NuxtLink>
+      <NuxtLink to="/kurse" class="inline-flex items-center gap-[6px] font-semibold text-teal-700 no-underline"><ArrowLeft :size="16" /> Alle Kurse</NuxtLink>
     </div>
 
     <div
@@ -139,13 +177,13 @@ const taskParts = computed<TaskPart[]>(() => {
           <button
             type="button"
             class="flex shrink-0 items-center justify-center border border-border bg-surface text-text-muted transition-colors hover:text-text"
-            style="width: 38px; height: 38px; border-radius: 10px; font-size: 16px"
+            style="width: 38px; height: 38px; border-radius: 10px"
             aria-label="Zurück"
             @click="goBack"
-          >←</button>
+          ><ArrowLeft :size="18" /></button>
           <div class="min-w-0">
-            <div class="truncate text-text-muted" style="font-size: 13px">
-              {{ courseTitle }} <span class="text-text-faint">›</span> {{ chapterTitle }}
+            <div class="flex items-center gap-[5px] truncate text-text-muted" style="font-size: 13px">
+              {{ courseTitle }} <ChevronRight :size="14" class="shrink-0 text-text-faint" /> {{ chapterTitle }}
             </div>
             <h1 class="truncate font-display font-bold text-text" style="font-size: 20px; line-height: 1.2; letter-spacing: -0.3px">
               {{ lesson.title }}
@@ -158,23 +196,23 @@ const taskParts = computed<TaskPart[]>(() => {
           <div class="flex items-center" style="gap: 10px">
             <span class="text-text-muted" style="font-size: 13px">Editor</span>
             <div
-              class="flex items-center bg-bg"
+              class="flex items-center bg-inset-2"
               style="border-radius: 999px; padding: 3px; gap: 2px"
             >
               <button
                 type="button"
-                class="rounded-pill font-semibold transition-colors"
-                :class="codeTheme === 'light' ? 'bg-teal-700 text-white' : 'text-text-muted'"
+                class="flex items-center gap-[6px] rounded-pill font-semibold transition-colors"
+                :class="codeTheme === 'light' ? 'bg-teal-600 text-on-teal' : 'text-text-faint'"
                 style="padding: 6px 13px; font-size: 13px"
                 @click="codeTheme = 'light'"
-              >☀ Hell</button>
+              ><Sun :size="14" /> Hell</button>
               <button
                 type="button"
-                class="rounded-pill font-semibold transition-colors"
-                :class="codeTheme === 'dark' ? 'bg-teal-700 text-white' : 'text-text-muted'"
+                class="flex items-center gap-[6px] rounded-pill font-semibold transition-colors"
+                :class="codeTheme === 'dark' ? 'bg-teal-600 text-on-teal' : 'text-text-faint'"
                 style="padding: 6px 13px; font-size: 13px"
                 @click="codeTheme = 'dark'"
-              >☾ Dunkel</button>
+              ><Moon :size="14" /> Dunkel</button>
             </div>
           </div>
 
@@ -188,34 +226,34 @@ const taskParts = computed<TaskPart[]>(() => {
           <button
             type="button"
             class="flex shrink-0 items-center justify-center border border-border bg-surface text-text-muted transition-colors hover:text-text"
-            style="width: 38px; height: 38px; border-radius: 10px; font-size: 16px"
+            style="width: 38px; height: 38px; border-radius: 10px"
             aria-label="Schließen"
             @click="goBack"
-          >✕</button>
+          ><X :size="18" /></button>
         </div>
       </div>
 
       <!-- ===== TASK STRIP ===== -->
       <div
         class="bg-teal-soft"
-        style="border-bottom: 1px solid #CDEDE8; padding: 16px 22px"
+        style="border-bottom: 1px solid rgba(18,181,165,0.25); padding: 16px 22px"
       >
         <div class="flex items-start justify-between" style="gap: 16px">
           <div class="flex items-start" style="gap: 13px">
             <span
-              class="flex shrink-0 items-center justify-center bg-teal-600 text-white"
-              style="width: 30px; height: 30px; border-radius: 9px; font-size: 15px"
-            >✦</span>
+              class="flex shrink-0 items-center justify-center bg-teal-600 text-on-teal"
+              style="width: 30px; height: 30px; border-radius: 9px"
+            ><Sparkles :size="16" /></span>
             <div>
               <div
-                class="font-semibold uppercase text-teal-700"
+                class="font-semibold uppercase text-teal-500"
                 style="font-size: 11.5px; letter-spacing: 1px; margin-bottom: 3px"
               >Deine Aufgabe</div>
-              <p class="text-text" style="font-size: 15.5px; line-height: 1.5">
+              <p class="text-text-body" style="font-size: 15.5px; line-height: 1.5">
                 <template v-for="(part, i) in taskParts" :key="i">
                   <code
                     v-if="part.code"
-                    class="bg-white/70 font-mono text-teal-700"
+                    class="bg-inset font-mono text-teal-500"
                     style="border-radius: 5px; padding: 2px 6px; font-size: 13.5px"
                   >{{ part.text }}</code>
                   <span v-else>{{ part.text }}</span>
@@ -225,16 +263,25 @@ const taskParts = computed<TaskPart[]>(() => {
                 v-if="showHint && lesson.hint"
                 class="text-text-muted"
                 style="font-size: 13.5px; line-height: 1.5; margin-top: 8px"
-              >{{ lesson.hint }}</p>
+              >
+                <template v-for="(part, i) in hintParts" :key="i">
+                  <code
+                    v-if="part.code"
+                    class="bg-inset font-mono text-teal-500"
+                    style="border-radius: 5px; padding: 1px 5px; font-size: 12.5px"
+                  >{{ part.text }}</code>
+                  <span v-else>{{ part.text }}</span>
+                </template>
+              </p>
             </div>
           </div>
 
           <button
             type="button"
-            class="flex shrink-0 items-center gap-[6px] border border-border bg-surface font-semibold text-text transition-colors hover:bg-bg"
+            class="flex shrink-0 items-center gap-[6px] border border-border bg-inset font-semibold text-teal-700 transition-colors hover:bg-inset-2"
             style="border-radius: 10px; padding: 8px 14px; font-size: 13.5px"
             @click="showHint = !showHint"
-          >💡 Hinweis</button>
+          ><Lightbulb :size="15" /> Hinweis</button>
         </div>
       </div>
 
@@ -253,7 +300,7 @@ const taskParts = computed<TaskPart[]>(() => {
             <ClientOnly>
               <LessonCodeEditor :model-value="lesson.html" :theme="codeTheme" readonly />
               <template #fallback>
-                <pre class="overflow-auto font-mono text-text-muted" style="background:#16162A;color:#8E89A8;border-radius:10px;padding:12px;font-size:13px;min-height:60px">{{ lesson.html }}</pre>
+                <pre class="overflow-auto font-mono" style="background:#0E1C19;color:#557068;border:1px solid #1E332E;border-radius:10px;padding:12px;font-size:13px;min-height:60px">{{ lesson.html }}</pre>
               </template>
             </ClientOnly>
           </div>
@@ -269,7 +316,7 @@ const taskParts = computed<TaskPart[]>(() => {
             <ClientOnly>
               <LessonCodeEditor v-model="css" :theme="codeTheme" />
               <template #fallback>
-                <pre class="overflow-auto font-mono" style="background:#1B1A2E;color:#E6E3F5;border-radius:10px;padding:12px;font-size:13px;min-height:120px">{{ css }}</pre>
+                <pre class="overflow-auto font-mono" style="background:#0E1C19;color:#DDEBE8;border:1px solid #1E332E;border-radius:10px;padding:12px;font-size:13px;min-height:120px">{{ css }}</pre>
               </template>
             </ClientOnly>
           </div>
@@ -285,12 +332,12 @@ const taskParts = computed<TaskPart[]>(() => {
                   class="font-semibold uppercase text-text-faint"
                   style="font-size: 11.5px; letter-spacing: 1px; margin-bottom: 10px"
                 >Live-Vorschau</div>
-                <div class="border border-border bg-surface" style="border-radius: 12px; min-height: 200px" />
+                <div class="border border-border" style="border-radius: 12px; min-height: 200px; background: #F3FAF8" />
               </div>
             </template>
           </ClientOnly>
 
-          <LessonCheckPanel :results="results" :has-checked="hasChecked" @check="runCheck" />
+          <LessonCheckPanel v-if="hasCheck" :results="results" :has-checked="hasChecked" @check="runCheck" />
         </div>
       </div>
 
@@ -298,26 +345,27 @@ const taskParts = computed<TaskPart[]>(() => {
       <div class="flex items-center justify-between border-t border-border" style="padding: 16px 22px; gap: 16px">
         <button
           type="button"
-          class="font-medium text-text-muted transition-colors hover:text-text"
+          class="flex items-center gap-[6px] font-medium text-text-muted transition-colors hover:text-text"
           style="font-size: 14px"
-          @click="goBack"
-        >← Zurück</button>
+          @click="goPrev"
+        ><ArrowLeft :size="16" /> Zurück</button>
 
         <div class="flex items-center" style="gap: 18px">
           <button
+            v-if="canShowSolution"
             type="button"
             class="font-medium text-teal-700 transition-colors hover:text-teal-600"
             style="font-size: 14px"
-            @click="showSolution"
-          >Lösung anzeigen</button>
+            @click="toggleSolution"
+          >{{ solutionShown ? 'Lösung verbergen' : 'Lösung anzeigen' }}</button>
           <button
             type="button"
-            class="rounded-[10px] font-semibold text-white transition-colors"
+            class="flex items-center gap-[6px] rounded-[10px] font-semibold text-on-teal transition-colors"
             :class="allPassed ? 'bg-teal-600 hover:bg-teal-700' : 'cursor-not-allowed bg-teal-600/40'"
             style="padding: 10px 20px; font-size: 14px"
             :disabled="!allPassed"
             @click="goNext"
-          >Weiter →</button>
+          >Weiter <ArrowRight :size="16" /></button>
         </div>
       </div>
     </div>

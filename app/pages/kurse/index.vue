@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { ArrowRight } from 'lucide-vue-next'
+
 interface Course {
   id: number
   title: string
@@ -24,28 +26,27 @@ const total = computed(() => activeCourse.value?.totalCount ?? 0)
   <div class="flex flex-col gap-[28px]">
     <!-- HERO -->
     <section
-      class="relative overflow-hidden"
-      style="border-radius: 22px; padding: 40px 44px; background: linear-gradient(135deg,#0E7A70,#12B5A5); box-shadow: 0 20px 44px -22px rgba(14,122,112,0.7)"
+      class="relative overflow-hidden border border-border"
+      style="border-radius: 22px; padding: 40px 44px; background: radial-gradient(130% 150% at 86% -30%, rgba(18,181,165,0.42) 0%, rgba(18,181,165,0.06) 42%, rgba(255,255,255,0) 68%), #11201D"
     >
       <LightCircles
         :circles="[
-          { size: 280, top: '-80px', right: '-60px', opacity: 0.10 },
-          { size: 220, bottom: '-130px', right: '90px', opacity: 0.08 },
+          { size: 280, top: '-80px', right: '-60px', opacity: 0.035 },
         ]"
       />
 
       <div class="relative z-10 flex flex-col" style="gap: 16px">
         <span
-          class="self-start rounded-pill bg-white/15 font-semibold uppercase tracking-wide text-white"
+          class="self-start rounded-pill bg-teal-soft font-semibold uppercase tracking-wide text-teal-500"
           style="padding: 6px 14px; font-size: 12px; letter-spacing: 0.6px"
         >CSS lernen by doing</span>
 
         <h1
-          class="font-display font-extrabold text-white"
-          style="font-size: 36px; line-height: 1.1; letter-spacing: -0.5px"
-        >Schreib echtes CSS, sieh es sofort.</h1>
+          class="font-display font-extrabold text-text"
+          style="font-size: 38px; line-height: 1.1; letter-spacing: -0.5px"
+        >Schreib echtes CSS, sieh es <span class="text-teal-700">sofort</span>.</h1>
 
-        <p class="text-white/85" style="font-size: 17px; line-height: 1.5; max-width: 620px">
+        <p class="text-text-muted" style="font-size: 17px; line-height: 1.5; max-width: 620px">
           Kleine Lektionen, ein Code-Editor mit Live-Vorschau und automatischer Prüfung. Lerne in deinem Tempo.
         </p>
 
@@ -53,10 +54,10 @@ const total = computed(() => activeCourse.value?.totalCount ?? 0)
           <NuxtLink
             v-if="activeCourse"
             :to="`/kurse/${activeCourse.slug}`"
-            class="flex items-center bg-white font-semibold text-teal-700 no-underline shadow-btn transition-transform hover:-translate-y-[1px]"
+            class="flex items-center gap-[6px] bg-teal-600 font-semibold text-on-teal no-underline shadow-btn transition-colors hover:bg-teal-700"
             style="border-radius: 11px; padding: 13px 22px; font-size: 15px"
-          >Weiterlernen →</NuxtLink>
-          <span class="font-semibold text-white/90" style="font-size: 15px">
+          >Weiterlernen <ArrowRight :size="17" /></NuxtLink>
+          <span class="font-semibold text-text-faint" style="font-size: 15px">
             {{ done }} von {{ total }} Lektionen geschafft
           </span>
         </div>

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { LogOut } from 'lucide-vue-next'
+
 const route = useRoute()
 const { user, fetchMe } = useAuth()
 
@@ -9,8 +11,6 @@ onMounted(() => {
 function isActive(path: string) {
   return route.path === path || route.path.startsWith(path + '/')
 }
-
-const initials = computed(() => user.value?.avatar_initials || 'MK')
 </script>
 
 <template>
@@ -36,10 +36,13 @@ const initials = computed(() => user.value?.avatar_initials || 'MK')
 
         <NuxtLink
           to="/login"
-          class="ml-[6px] flex items-center justify-center rounded-full bg-teal-700 font-semibold text-white no-underline"
-          style="width: 38px; height: 38px; font-size: 13px"
-          :title="user?.display_name || 'Login'"
-        >{{ initials }}</NuxtLink>
+          class="ml-[6px] flex items-center justify-center rounded-full bg-teal-600 text-on-teal no-underline shadow-btn transition-colors hover:bg-teal-700"
+          style="width: 38px; height: 38px"
+          :title="user?.display_name ? `${user.display_name} · abmelden` : 'Abmelden'"
+          aria-label="Abmelden"
+        >
+          <LogOut :size="18" />
+        </NuxtLink>
       </div>
     </div>
   </nav>

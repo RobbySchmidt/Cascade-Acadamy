@@ -40,6 +40,7 @@ export default defineEventHandler(async (event) => {
   const pos = all.findIndex((l) => l.id === lesson.id)
   const index = pos + 1
   const nextLessonId = pos >= 0 && pos + 1 < all.length ? all[pos + 1].id : null
+  const prevLessonId = pos > 0 ? all[pos - 1].id : null
 
   return {
     lesson: { ...lesson, course: courseId, chapter: chapterId },
@@ -49,5 +50,6 @@ export default defineEventHandler(async (event) => {
     index,
     total,
     nextLessonId,
+    prevLessonId,
   }
 })

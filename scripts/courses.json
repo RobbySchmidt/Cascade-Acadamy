@@ -1,0 +1,38 @@
+[
+  {
+    "slug": "css-grundlagen",
+    "title": "CSS-Grundlagen",
+    "level": "Anfänger",
+    "status": "active",
+    "sort": 1,
+    "description": "Von Selektoren bis Box-Modell: die Basics, mit denen du jede Webseite stylen kannst.",
+    "lessonsFile": "lessons.json"
+  },
+  {
+    "slug": "flexbox-layout",
+    "title": "Flexbox",
+    "level": "Mittel",
+    "status": "active",
+    "sort": 2,
+    "description": "1D-Layouts mit Flexbox: Elemente entlang einer Achse anordnen, ausrichten und verteilen – ideal für Navigationen, Toolbars und Karten.",
+    "lessonsFile": "lessons-flexbox-layout.json"
+  },
+  {
+    "slug": "css-grid",
+    "title": "CSS Grid",
+    "level": "Mittel",
+    "status": "active",
+    "sort": 3,
+    "description": "2D-Layouts mit CSS Grid: Seiten in Zeilen und Spalten aufbauen, Bereiche platzieren und ausrichten.",
+    "lessonsFile": "lessons-css-grid.json"
+  },
+  {
+    "slug": "animationen",
+    "title": "Animationen",
+    "level": "Fortgeschritten",
+    "status": "active",
+    "sort": 4,
+    "description": "Bewegung und Übergänge mit CSS: Transitions, Keyframe-Animationen und Transforms.",
+    "lessonsFile": "lessons-animationen.json"
+  }
+]

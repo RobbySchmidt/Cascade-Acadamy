@@ -72,59 +72,58 @@ useHead({ title: 'Profil · Cascade Academy' })
 
 <template>
   <div class="mx-auto max-w-[920px]">
-    <!-- IDENTITY BANNER -->
+    <!-- IDENTITY ROW -->
+    <section class="flex items-center" style="gap: 20px; padding: 4px 0 8px">
+      <!-- avatar -->
+      <div
+        class="flex shrink-0 items-center justify-center font-display font-extrabold text-on-teal shadow-btn"
+        style="width: 64px; height: 64px; border-radius: 16px; background: #12B5A5; font-size: 24px"
+      >{{ initials }}</div>
+
+      <!-- name + subline -->
+      <div class="min-w-0 flex-1">
+        <h1 class="font-display font-extrabold text-text" style="font-size: 26px; letter-spacing: -0.5px">{{ displayName }}</h1>
+        <p class="mt-[4px] text-text-muted" style="font-size: 15px">
+          Lernt seit {{ daysSinceStart }} Tagen · Fortschritt {{ sublineProgress }}
+        </p>
+      </div>
+
+      <!-- streak -->
+      <div class="shrink-0 text-right">
+        <div class="font-display font-extrabold text-teal-700" style="font-size: 30px; line-height: 1">{{ streak }}</div>
+        <div class="mt-[4px] font-semibold uppercase text-text-faint" style="font-size: 11.5px; letter-spacing: 0.8px">Tage Streak</div>
+      </div>
+    </section>
+
+    <!-- BIG-PROGRESS STAT -->
     <section
-      class="relative overflow-hidden"
-      style="border-radius: 22px; padding: 28px 32px; background: linear-gradient(125deg,#0E7A70,#12B5A5,#3AC9B0); box-shadow: 0 20px 44px -22px rgba(14,122,112,0.7)"
+      class="relative overflow-hidden border border-border bg-surface"
+      style="border-radius: 20px; padding: 26px 28px; margin-top: 18px; background: radial-gradient(120% 140% at 90% -20%, rgba(18,181,165,0.30) 0%, rgba(18,181,165,0.04) 44%, rgba(255,255,255,0) 70%), #11201D"
     >
-      <LightCircles
-        :circles="[
-          { size: 260, top: '-90px', right: '-60px', opacity: 0.10 },
-          { size: 200, bottom: '-110px', right: '180px', opacity: 0.07 },
-        ]"
-      />
-
-      <div class="relative z-10 flex items-center" style="gap: 22px">
-        <!-- avatar -->
-        <div
-          class="flex shrink-0 items-center justify-center font-display font-extrabold text-white"
-          style="width: 76px; height: 76px; border-radius: 18px; background: rgba(255,255,255,0.2); border: 2px solid rgba(255,255,255,0.8); font-size: 28px"
-        >{{ initials }}</div>
-
-        <!-- name + subline -->
-        <div class="min-w-0 flex-1">
-          <h1 class="font-display font-extrabold text-white" style="font-size: 26px; letter-spacing: -0.5px">{{ displayName }}</h1>
-          <p class="mt-[4px] text-white/85" style="font-size: 15px">
-            Lernt seit {{ daysSinceStart }} Tagen · Fortschritt {{ sublineProgress }}
-          </p>
+      <div class="relative z-10 flex flex-col" style="gap: 16px">
+        <div class="flex items-end" style="gap: 14px">
+          <span class="font-display font-extrabold leading-none text-text" style="font-size: 64px; letter-spacing: -2px">
+            {{ percent }}<span class="text-teal-700">%</span>
+          </span>
+          <span class="font-medium text-text-muted" style="font-size: 16px; padding-bottom: 8px; line-height: 1.3">
+            CSS-Grundlagen<br>abgeschlossen
+          </span>
         </div>
-
-        <!-- streak chip -->
-        <div
-          class="flex shrink-0 items-center"
-          style="gap: 10px; padding: 12px 16px; border-radius: 14px; background: rgba(255,255,255,0.16)"
-        >
-          <span style="font-size: 22px">🔥</span>
-          <div class="leading-tight text-white">
-            <div class="font-display font-extrabold" style="font-size: 20px">{{ streak }}</div>
-            <div class="font-medium text-white/85" style="font-size: 12.5px">Tage Streak</div>
-          </div>
-        </div>
+        <ProgressBar :percent="percent" variant="teal" />
       </div>
     </section>
 
     <!-- STAT TILES -->
-    <div class="grid grid-cols-3 gap-[18px]" style="margin-top: 18px">
-      <StatTile accent="teal" :value="String(doneCount)" label="Lektionen erledigt" icon="📘" />
-      <StatTile accent="orange" :value="String(completedChapters)" label="Kapitel abgeschlossen" icon="🎯" />
-      <StatTile accent="violet" :value="percent + ' %'" label="CSS-Grundlagen" icon="📈" />
+    <div class="grid grid-cols-2 gap-[18px]" style="margin-top: 18px">
+      <StatTile :value="String(doneCount)" label="Lektionen erledigt" />
+      <StatTile :value="String(completedChapters)" label="Kapitel abgeschlossen" />
     </div>
 
     <!-- LIVE-CHAT -->
     <div class="flex items-center justify-between" style="margin-top: 34px; margin-bottom: 14px">
       <h2 class="font-display font-bold text-text" style="font-size: 22px; letter-spacing: -0.3px">Live-Chat · wer ist online</h2>
       <span class="flex items-center font-medium text-text-muted" style="gap: 7px; font-size: 14px">
-        <span class="inline-block rounded-full" style="width: 9px; height: 9px; background: #2BB673" />
+        <span class="inline-block rounded-full" style="width: 9px; height: 9px; background: #2BD68A" />
         14 online
       </span>
     </div>

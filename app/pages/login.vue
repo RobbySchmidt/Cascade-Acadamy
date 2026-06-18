@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { Check } from 'lucide-vue-next'
+
 definePageMeta({ layout: 'blank' })
 
 const { login, loginAsGuest } = useAuth()
@@ -67,8 +69,8 @@ async function onGuest() {
           <div v-for="f in features" :key="f" class="flex items-center" style="gap: 12px">
             <span
               class="flex flex-shrink-0 items-center justify-center text-white"
-              style="width: 24px; height: 24px; border-radius: 7px; background: rgba(255,255,255,0.2); font-size: 13px"
-            >✓</span>
+              style="width: 24px; height: 24px; border-radius: 7px; background: rgba(255,255,255,0.2)"
+            ><Check :size="14" :stroke-width="3" /></span>
             <span class="font-medium text-white" style="font-size: 15px">{{ f }}</span>
           </div>
         </div>
@@ -101,8 +103,8 @@ async function onGuest() {
               type="text"
               placeholder="du@beispiel.de"
               autocomplete="username"
-              class="w-full text-text focus:outline-none focus:ring-[3px] focus:ring-[rgba(18,181,165,0.15)] focus:border-teal-600"
-              style="border: 1px solid #DCEBE7; background: #FBFDFC; border-radius: 11px; padding: 12px 14px; font-size: 15px"
+              class="w-full text-text placeholder:text-text-faint focus:outline-none focus:ring-[3px] focus:ring-[rgba(18,181,165,0.18)] focus:border-teal-600"
+              style="border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.04); border-radius: 11px; padding: 12px 14px; font-size: 15px"
             >
           </div>
 
@@ -118,8 +120,8 @@ async function onGuest() {
               type="password"
               placeholder="••••••••"
               autocomplete="current-password"
-              class="w-full text-text focus:outline-none focus:ring-[3px] focus:ring-[rgba(18,181,165,0.15)] focus:border-teal-600"
-              style="border: 1px solid #DCEBE7; background: #FBFDFC; border-radius: 11px; padding: 12px 14px; font-size: 15px"
+              class="w-full text-text placeholder:text-text-faint focus:outline-none focus:ring-[3px] focus:ring-[rgba(18,181,165,0.18)] focus:border-teal-600"
+              style="border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.04); border-radius: 11px; padding: 12px 14px; font-size: 15px"
             >
           </div>
 
@@ -129,23 +131,23 @@ async function onGuest() {
           <button
             type="submit"
             :disabled="pending"
-            class="w-full bg-teal-600 font-semibold text-white shadow-btn transition-colors hover:bg-teal-700 disabled:opacity-70"
+            class="w-full bg-teal-600 font-semibold text-on-teal shadow-btn transition-colors hover:bg-teal-700 disabled:opacity-70"
             style="border-radius: 11px; padding: 12px; font-size: 15px"
           >{{ pending ? 'Wird angemeldet…' : 'Anmelden' }}</button>
         </form>
 
         <!-- oder divider -->
         <div class="flex items-center" style="gap: 12px; margin: 20px 0">
-          <span class="flex-1" style="height: 1px; background: #DCEBE7" />
+          <span class="flex-1" style="height: 1px; background: rgba(255,255,255,0.08)" />
           <span class="text-text-faint" style="font-size: 13px">oder</span>
-          <span class="flex-1" style="height: 1px; background: #DCEBE7" />
+          <span class="flex-1" style="height: 1px; background: rgba(255,255,255,0.08)" />
         </div>
 
         <!-- Ohne Konto loslernen -->
         <button
           type="button"
-          class="w-full bg-teal-soft font-semibold text-teal-700 transition-colors hover:bg-[#CDEDE8]"
-          style="border-radius: 11px; padding: 12px; font-size: 15px"
+          class="w-full bg-teal-soft font-semibold text-teal-700 transition-colors hover:bg-[rgba(18,181,165,0.2)]"
+          style="border-radius: 11px; padding: 12px; font-size: 15px; border: 1px solid rgba(18,181,165,0.25)"
           @click="onGuest"
         >Ohne Konto loslernen</button>
         <p class="text-center text-text-faint" style="font-size: 12.5px; margin-top: 8px">

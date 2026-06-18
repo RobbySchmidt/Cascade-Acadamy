@@ -7,8 +7,9 @@ const props = withDefaults(defineProps<{
   size: 34,
 })
 
-// Bar fill color: white panel uses solid white; default uses white inside the teal square.
-const barColor = 'white'
+// Bar fill: on the white/teal panel the bars are white; on the (dark) default
+// chrome the teal square keeps dark bars per the handoff.
+const barColor = props.white ? 'white' : '#06201C'
 </script>
 
 <template>
@@ -31,8 +32,8 @@ const barColor = 'white'
       class="font-display font-extrabold leading-none tracking-[-0.3px]"
       :style="{ fontSize: '20px' }"
     >
-      <span :style="{ color: white ? '#FFFFFF' : '#1F2A28' }">Cascade</span>
-      <span :style="{ color: white ? '#FFFFFF' : '#0E7A70' }">&nbsp;Academy</span>
+      <span :style="{ color: '#FFFFFF' }">Cascade</span>
+      <span :style="{ color: white ? '#FFFFFF' : '#3FD9C9' }">&nbsp;Academy</span>
     </span>
   </span>
 </template>
