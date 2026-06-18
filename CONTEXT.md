@@ -2,7 +2,7 @@
 
 > **Zweck dieser Datei:** Vollständiger Übergabe-Kontext, damit eine neue Claude-Instanz
 > (oder ein:e Entwickler:in) sofort weiß, was dieses Projekt ist, was bereits gebaut wurde,
-> wie es läuft und wo es weitergeht. Stand: **2026-06-17**.
+> wie es läuft und wo es weitergeht. Stand: **2026-06-18**.
 
 ---
 
@@ -12,14 +12,21 @@
 kurze Lektionen, ein CSS-Editor mit Live-Vorschau, ein automatischer Checker, leichte
 Gamification (Streak, Stats) und ein (vorerst statischer) Live-Chat.
 
-Gebaut wurde **1:1 nach dem Design-Handoff** in [`design_handoff_cascade_academy/`](design_handoff_cascade_academy/)
+Gebaut wurde nach dem Design-Handoff in [`design_handoff_cascade_academy/`](design_handoff_cascade_academy/)
 (5 Hi-Fi-Screens + `README.md` mit allen Design-Tokens + Screenshots in `screenshots/`).
 Die Single Source of Truth des Designs ist `design_handoff_cascade_academy/Cascade Academy.dc.html`.
+
+> **Design-Direction: DARK.** Der Handoff wurde am 2026-06-18 auf ein dunkles,
+> teal-getöntes Theme überarbeitet und die gesamte UI darauf umgestellt (near-black
+> `#0B1715`, Teal-Akzent `#12B5A5`, dunkler Text *auf* Teal `#06201C`). Dazu kamen:
+> **Lucide-Icons** statt Unicode-Glyphen, eine **Page-Transition** (`app.pageTransition`
+> in `nuxt.config.ts` + CSS in `main.css`) und der Logout-Button mit `LogOut`-Icon.
 
 **UI-Sprache: durchgehend Deutsch.**
 
 ### Dokumente
-- **Spec:** [`docs/superpowers/specs/2026-06-17-cascade-academy-design.md`](docs/superpowers/specs/2026-06-17-cascade-academy-design.md)
+- **Spec (Initial):** [`docs/superpowers/specs/2026-06-17-cascade-academy-design.md`](docs/superpowers/specs/2026-06-17-cascade-academy-design.md)
+- **Spec (weitere Kurse):** [`docs/superpowers/specs/2026-06-18-weitere-kurse-design.md`](docs/superpowers/specs/2026-06-18-weitere-kurse-design.md)
 - **Implementierungsplan:** [`docs/superpowers/plans/2026-06-17-cascade-academy.md`](docs/superpowers/plans/2026-06-17-cascade-academy.md)
 
 ---
@@ -32,6 +39,7 @@ Die Single Source of Truth des Designs ist `design_handoff_cascade_academy/Casca
 | Styling | **Tailwind v4** (`@tailwindcss/vite`, Tokens via `@theme` in `app/assets/css/main.css`) |
 | Backend/Daten | **Directus** (REST, nur serverseitig angesprochen) |
 | Code-Editor | **CodeMirror 6** (`codemirror`, `@codemirror/lang-css`, …) |
+| Icons | **lucide-vue-next** (pro Komponente importiert, nicht auto-importiert) |
 | Tests | **Vitest** (+ happy-dom) |
 | Paketmanager | **yarn** (yarn.lock) |
 | Fonts | Bricolage Grotesque · Plus Jakarta Sans · JetBrains Mono (Google Fonts) |
@@ -61,7 +69,7 @@ Browser  ──►  Nuxt Pages (app/pages)  ──►  eigene Nitro-API (server/
 ```
 .env                                  # DIRECTUS_URL, DIRECTUS_TOKEN, NUXT_SESSION_SECRET
 nuxt.config.ts                        # runtimeConfig + Google-Fonts-Head
-app/assets/css/main.css               # @theme Design-Tokens
+app/assets/css/main.css               # @theme Dark-Tokens + Page-Transition + cursor:pointer-Basisregel
 app/app.vue · app/layouts/            # default (mit Nav) · blank (Login)
 app/middleware/auth.global.ts         # Auth-Gating
 app/composables/
@@ -79,7 +87,10 @@ app/pages/
 server/utils/                         # directus.ts, session.ts, currentUser.ts
 server/api/                           # auth/login|logout, me, courses, courses/[slug],
                                       # lessons/[id], progress
-scripts/                             # directus-schema.ps1, directus-seed.ps1, lessons.json
+scripts/                             # directus-schema.ps1, directus-seed.ps1 (generisch),
+                                      # directus-add-courses.ps1 (nicht-destruktiv),
+                                      # directus-sync-lessons.ps1, courses.json,
+                                      # lessons.json (+ lessons-flexbox-layout / -css-grid / -animationen.json)
 test/                                # session.test.ts, checker.test.ts (10 Tests, grün)
 ```
 
@@ -103,17 +114,24 @@ mit **`cascade_`** geprefixt. **Niemals** Nicht-`cascade_`- oder `directus_*`-Co
 ### Seed-Daten (siehe `scripts/`)
 - **Users:** `testuser-1` (Mara K. / „MK", streak 5) und `testuser-2` (Tom B. / „TB", streak 0).
   **Passwort beider: `test1234`.** Login per Benutzername **oder** E-Mail (`…@cascade.local`).
-- **Kurse:** „CSS-Grundlagen" (active) + „Flexbox & Layout" (locked) + „Animationen" (locked).
-- **Beispiel-Fortschritt:** testuser-1 hat Lektionen 1–5 als „done" → Kurs ~33 %.
+- **4 Kurse, alle `active`** (Quelle: `scripts/courses.json`):
+  1. **CSS-Grundlagen** (Anfänger) → `lessons.json`
+  2. **Flexbox** (Mittel, 1D) → `lessons-flexbox-layout.json`  (slug bleibt `flexbox-layout`)
+  3. **CSS Grid** (Mittel, 2D) → `lessons-css-grid.json`
+  4. **Animationen** (Fortgeschritten) → `lessons-animationen.json`
+- Jeder Kurs: **4 Kapitel, 15 Lektionen** (3× `lesen` + 12× `uebung`), je mit Mini-Projekt am Ende.
+- **Beispiel-Fortschritt:** testuser-1 hat CSS-Grundlagen-Lektionen 1–5 als „done".
 
-### Die 15 Lektionen (Kurs „CSS-Grundlagen", Quelle: `scripts/lessons.json`)
-1. **Selektoren & Grundlagen:** Was ist ein Selektor? (lesen) · Element-Selektoren · Klassen & IDs · Farben setzen
-2. **Text & Schrift:** Farbe & Textausrichtung · Schriftgröße & -dicke · Schriftart & Zeilenhöhe · Text dekorieren
-3. **Box-Modell:** padding · margin · border · Ecken & Schatten
-4. **Hintergrund & Abschluss:** Hintergrund & Verlauf · Größe & Anzeige · Mini-Projekt: Karte stylen
-
-Jede `uebung` hat `assertions` (`[{selector, prop, expected}]`), `hint` und `solution`.
-Die Lösungen erfüllen ihre Assertions (in Phase-1-Review geprüft).
+### Lektions-Dateien & Schema
+- Lektionen liegen **pro Kurs** in einer eigenen JSON; `courses.json` verknüpft slug → Datei.
+- Kapitel werden aus der Reihenfolge der `chapter`-Felder in der Lektionsdatei abgeleitet
+  (Seed + Add-Skript erzeugen sie automatisch).
+- Jede `uebung` hat `assertions` (`[{selector, prop, expected}]`), `hint` (konzeptionell,
+  **verrät nicht** den Code) und `solution`. `lesen`-Lektionen haben leere `assertions`.
+- **Checker-Regel beim Aufgaben-Design:** Kein `expected` darf dem Element-Default
+  entsprechen (sonst besteht leeres CSS sofort — war ein Bug in CSS-Lektion 6, dort
+  `h1`→`p` geändert). `transform`/`:hover`/`fr`/`repeat()` sind nicht statisch prüfbar
+  → bewusst als `lesen`-Lektionen umgesetzt.
 
 ---
 
@@ -129,6 +147,15 @@ Die Lösungen erfüllen ihre Assertions (in Phase-1-Review geprüft).
 5. Alle erfüllt → „Weiter →" aktiv → POST `/api/progress` → nächste Lektion. `lesen`-Lektionen
    haben keine Assertions und sind sofort „durch".
 
+**Editor-UX (in `lektion/[id].vue`):**
+- Bei `lesen`-Lektionen sind **PRÜFUNG-Panel und „Lösung anzeigen" ausgeblendet** (`hasCheck`/`canShowSolution`).
+- Die PRÜFUNG-Liste zeigt **nur `selektor · prop`**; den `expected`-Wert erst, wenn das
+  Kriterium erfüllt ist (sonst wäre der Check eine Lösungs-Anzeige).
+- **„Lösung anzeigen" ist umkehrbar** (Toggle „Lösung verbergen", sichert den User-Code).
+- Footer-„← Zurück" geht **eine Lektion zurück** (`prevLessonId` aus der API); Pfeil/✕ schließen zur Kursdetailseite.
+- Hinweise & Aufgaben rendern Backtick-`code` als Mono-Chips (gleiche `splitOnBackticks`-Logik).
+- Die **Live-Vorschau-Box** ist auf den hellen Editor-Ton `#F3FAF8` getönt (bleibt hell, egal ob Code-Theme hell/dunkel).
+
 ---
 
 ## 7. So läuft die App
@@ -140,11 +167,15 @@ yarn build            # Produktionsbuild (kompiliert alles inkl. Server-Routen)
 yarn test             # 10 Unit-Tests (Session + Checker)
 ```
 
-**Directus-Schema/Seed neu aufsetzen (PowerShell!):**
+**Directus-Daten pflegen (PowerShell!):**
 ```powershell
-powershell -File scripts/directus-schema.ps1   # idempotent (legt cascade_* an)
-powershell -File scripts/directus-seed.ps1     # wipe + reseed der cascade_*-Daten
+powershell -File scripts/directus-schema.ps1        # idempotent (legt cascade_* an)
+powershell -File scripts/directus-seed.ps1          # WIPE + reseed ALLER cascade_*-Daten (alle 4 Kurse aus courses.json)
+powershell -File scripts/directus-add-courses.ps1   # NICHT-destruktiv: nur Flexbox/Grid/Animationen anlegen/aktualisieren
+powershell -File scripts/directus-sync-lessons.ps1  # NICHT-destruktiv: Lektions-Texte (CSS-Grundlagen) per sort patchen
 ```
+> Die `add-courses`/`sync-lessons`-Skripte sind idempotent und lassen Fortschritt
+> unangetastet — bevorzugt für gezielte Updates statt eines vollen Re-Seeds.
 
 ---
 
@@ -159,32 +190,43 @@ powershell -File scripts/directus-seed.ps1     # wipe + reseed der cascade_*-Dat
 3. **`useCookie` parst `'1'` auf dem Server zu Zahl `1`** → Gast-Check nutzt darum `String(...) === '1'`.
 4. Beim Dev kann ein **verwaister Nuxt-Dev-Server auf Port 3000** hängen bleiben — ggf. vorhandenen
    Server weiterverwenden oder Node-Prozess beenden.
+5. **Checker prüft `getComputedStyle`** — entspricht ein `expected` dem Element-Default
+   (z. B. `h1` ist von Haus aus `font-size:32px`/`font-weight:700`), besteht leeres CSS
+   sofort. Beim Anlegen neuer Lektionen Default-Kollisionen vermeiden (siehe §5).
+6. **`getComputedStyle` lässt sich hier nicht headless prüfen** (happy-dom rechnet Flex/Grid
+   nicht aus, kein Browser im Sandbox). Neue Lektionen sind gegen das bekannte Chromium-
+   Verhalten entworfen, aber **nicht** live geklickt → vor Release einmal durchklicken.
 
 ---
 
 ## 9. Was ist FERTIG ✅
 
-- Alle 5 Screens, pixelnah am Design (gegen Screenshots abgeglichen).
-- Directus-Collections + Seed (2 User, 3 Kurse, 4 Kapitel, 15 Lektionen, Beispiel-Fortschritt).
-- Server-API (Auth, Kurse, Lektionen, Fortschritt) — getestet.
-- Checker inkl. Farb-Normalisierung + Cross-Browser-Shorthand-Fallback.
+- Alle 5 Screens im **dunklen Theme** (gegen die Dark-Screenshots im Handoff abgeglichen).
+- **Lucide-Icons** durchgängig, **Page-Transition**, Pointer-Cursor auf allem Klickbaren.
+- **4 Kurse** (CSS-Grundlagen, Flexbox, CSS Grid, Animationen), je 4 Kapitel / 15 Lektionen,
+  alle aktiv — in Directus angelegt + als Seed-Quelle (`courses.json` + Lektionsdateien).
+- Server-API (Auth, Kurse, Lektionen, Fortschritt inkl. `prevLessonId`) — getestet.
+- Checker inkl. Farb-Normalisierung + Cross-Browser-Shorthand-Fallback; PRÜFUNG verrät die
+  Lösung nicht mehr; Lösung-Toggle; `lesen`-Lektionen ohne Check/Lösung.
 - Login/Logout/Gast + Auth-Gating; Fortschritt pro User bzw. lokal für Gäste.
-- `yarn build` grün · `yarn test` 10/10 grün · End-to-End-HTTP-Smoke aller Routen grün.
+- `yarn build` grün · `yarn test` 10/10 grün.
 
 ## 10. Was ist NOCH OFFEN / bewusst weggelassen (YAGNI)
 
-- **Manueller Browser-Klicktest des Editors** steht noch aus: In der bisherigen Umgebung gab es
-  kein Browser-Automation-Tool, daher wurde das *interaktive* Tippen im CodeMirror + „Code prüfen"
-  nur per Code-Review/Logik verifiziert, nicht live geklickt. → **Einmal durch Lektion 5 klicken.**
+- **Manueller Browser-Klicktest** steht weiterhin aus (kein Browser im Sandbox-Tooling).
+  Besonders die **neuen 45 Lektionen** (Flexbox/Grid/Animationen) sind logisch/gegen
+  Chromium-Defaults entworfen, aber nicht live geklickt — vor Release durchspielen
+  (v. a. `gap` → `"16px"` und `grid-template-columns` → `"120px 120px 120px"` gegenprüfen).
 - **Live-Chat ist statischer Mock** (keine Persistenz, kein Realtime). Senden hängt nur lokal an.
-- **Nur der Anfänger-Kurs hat Inhalte.** „Flexbox & Layout" und „Animationen" sind gesperrte Platzhalter.
 - **Kein Passwort-Hashing, kein echtes Directus-Auth** (bewusst, Test-Setup). Vor echtem Einsatz: hashen.
 - Cookie `secure`-Flag ist nur in `production` aktiv. „vergessen?"/„Konto erstellen" sind nicht verdrahtet.
-- Keine Illustrationen (nur Gradients + „Light-Circles" wie im Design).
+- **Kein stufenweises Freischalten** — alle Kurse sofort aktiv (bewusst). `unlock_hint`/`status:locked`
+  sind im Schema noch vorhanden, falls Gating später gewünscht ist.
+- Keine Illustrationen (nur Gradients + Teal-Glow + „Light-Circles" wie im Design).
 
 ### Sinnvolle nächste Schritte
-1. Editor-Flow im echten Browser durchklicken & ggf. Feintuning.
-2. Weitere Kurse (Flexbox, Animationen) mit Inhalten füllen (gleiches Lesson-Schema).
+1. Alle Kurse im echten Browser durchklicken & ggf. einzelne Assertions feinjustieren.
+2. Optional: stufenweises Freischalten (Status serverseitig aus Fortschritt ableiten).
 3. Optional: echtes Auth + Passwort-Hashing, Chat persistent/realtime, „Konto erstellen"-Flow.
 
 ---
@@ -197,4 +239,8 @@ powershell -File scripts/directus-seed.ps1     # wipe + reseed der cascade_*-Dat
   aus dem Design-README.
 - Komponenten sind klein & fokussiert; Lektions-Subkomponenten liegen unter `app/components/lesson/`
   (Auto-Import-Name mit Prefix, z. B. `LessonCodeEditor`).
-- **Kein Git** in diesem Projekt (kein Repo initialisiert).
+- **Git:** Repo initialisiert, Hauptarbeit auf Branch `development` (Default `main`). Der/die
+  Nutzer:in committet selbst — nicht ungefragt committen/pushen.
+- **Dark-Theme-Tokens** liegen als `@theme`-Variablen in `main.css`; Text *auf* Teal nutzt
+  `text-on-teal` (`#06201C`), Teal-Text auf Dunkel `text-teal-700` (`#3FD9C9`). Lucide-Icons
+  werden pro Komponente importiert (kein Auto-Import).
