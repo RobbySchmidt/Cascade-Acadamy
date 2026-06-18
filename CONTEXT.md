@@ -10,7 +10,8 @@
 
 **Cascade Academy** ist eine deutschsprachige „CSS lernen by doing"-Lernplattform:
 kurze Lektionen, ein CSS-Editor mit Live-Vorschau, ein automatischer Checker, leichte
-Gamification (Streak, Stats) und ein (vorerst statischer) Live-Chat.
+Gamification (Streak, Stats) und ein **echter Live-Chat** (Allgemein + Direktnachrichten,
+Echtzeit via SSE, persistent in Directus — siehe §6b).
 
 Gebaut wurde nach dem Design-Handoff in [`design_handoff_cascade_academy/`](design_handoff_cascade_academy/)
 (5 Hi-Fi-Screens + `README.md` mit allen Design-Tokens + Screenshots in `screenshots/`).
@@ -27,6 +28,8 @@ Die Single Source of Truth des Designs ist `design_handoff_cascade_academy/Casca
 ### Dokumente
 - **Spec (Initial):** [`docs/superpowers/specs/2026-06-17-cascade-academy-design.md`](docs/superpowers/specs/2026-06-17-cascade-academy-design.md)
 - **Spec (weitere Kurse):** [`docs/superpowers/specs/2026-06-18-weitere-kurse-design.md`](docs/superpowers/specs/2026-06-18-weitere-kurse-design.md)
+- **Spec (Live-Chat):** [`docs/superpowers/specs/2026-06-18-live-chat-design.md`](docs/superpowers/specs/2026-06-18-live-chat-design.md)
+- **Spec (private Chats):** [`docs/superpowers/specs/2026-06-18-private-chat-design.md`](docs/superpowers/specs/2026-06-18-private-chat-design.md)
 - **Implementierungsplan:** [`docs/superpowers/plans/2026-06-17-cascade-academy.md`](docs/superpowers/plans/2026-06-17-cascade-academy.md)
 
 ---
@@ -75,23 +78,25 @@ app/middleware/auth.global.ts         # Auth-Gating
 app/composables/
   useAuth.ts                          # user-State, login/logout/fetchMe, isGuest
   useGuestProgress.ts                 # localStorage-Fortschritt für Gäste
+  useChat.ts                          # SSE-Chat: general/dms/online/conversations/unread, send()
 app/utils/
   checker.ts                          # Farb-Normalisierung + Assertion-Auswertung (getestet)
-  chatMock.ts                         # statische Chat-Daten
-app/components/                       # BrandLogo, AppNav, LightCircles, ProgressBar,
-                                      # CourseCard, LessonRow, StatTile, ChatPanel
+  chatRouting.ts                      # reine Konversations-Routing-Logik (getestet)
+app/components/                       # BrandLogo, AppNav, LightCircles, ProgressBar, CourseCard,
+                                      # LessonRow, StatTile, ChatPanel (Navigator), ChatThread
 app/components/lesson/                # CodeEditor, LivePreview, CheckPanel
 app/pages/
   index.vue                           # → redirect /kurse
   login.vue · kurse/index.vue · kurse/[slug].vue · lektion/[id].vue · profil.vue
-server/utils/                         # directus.ts, session.ts, currentUser.ts
-server/api/                           # auth/login|logout, me, courses, courses/[slug],
-                                      # lessons/[id], progress
+server/utils/                         # directus.ts, session.ts, currentUser.ts,
+                                      # chatHub.ts (In-Memory-Presence/Broadcast), profileStatus.ts (getestet)
+server/api/                           # auth/login|logout, me, courses, courses/[slug], lessons/[id],
+                                      # progress, users/[id], chat/stream (SSE), chat/messages
 scripts/                             # directus-schema.ps1, directus-seed.ps1 (generisch),
-                                      # directus-add-courses.ps1 (nicht-destruktiv),
-                                      # directus-sync-lessons.ps1, courses.json,
+                                      # directus-add-courses.ps1, directus-sync-lessons.ps1,
+                                      # directus-seed-progress-demo.ps1, courses.json,
                                       # lessons.json (+ lessons-flexbox-layout / -css-grid / -animationen.json)
-test/                                # session.test.ts, checker.test.ts (10 Tests, grün)
+test/                                # session, checker, profileStatus, chatRouting (22 Tests, grün)
 ```
 
 ---
@@ -108,6 +113,7 @@ mit **`cascade_`** geprefixt. **Niemals** Nicht-`cascade_`- oder `directus_*`-Co
 | `cascade_chapters` | course (M2O), title, sort |
 | `cascade_lessons` | chapter (M2O), course (M2O), title, type (lesen/uebung), task, html, css_starter, solution, hint, **assertions (JSON)**, sort |
 | `cascade_progress` | user (M2O), lesson (M2O), course (M2O), status (done), completed_at |
+| `cascade_messages` | user (M2O, Absender), **recipient (M2O, nullable)** = `null` Allgemein-Chat / gesetzt DM, text, created_at |
 
 > Alle PKs sind Auto-Increment-Integer.
 
@@ -120,7 +126,8 @@ mit **`cascade_`** geprefixt. **Niemals** Nicht-`cascade_`- oder `directus_*`-Co
   3. **CSS Grid** (Mittel, 2D) → `lessons-css-grid.json`
   4. **Animationen** (Fortgeschritten) → `lessons-animationen.json`
 - Jeder Kurs: **4 Kapitel, 15 Lektionen** (3× `lesen` + 12× `uebung`), je mit Mini-Projekt am Ende.
-- **Beispiel-Fortschritt:** testuser-1 hat CSS-Grundlagen-Lektionen 1–5 als „done".
+- **Demo-Fortschritt** (für die Chat-Profil-Vorschau, via `directus-seed-progress-demo.ps1`):
+  testuser-1 hat **CSS-Grundlagen 15/15 (abgeschlossen)** + **Flexbox 3/15 (begonnen)**.
 
 ### Lektions-Dateien & Schema
 - Lektionen liegen **pro Kurs** in einer eigenen JSON; `courses.json` verknüpft slug → Datei.
@@ -158,13 +165,38 @@ mit **`cascade_`** geprefixt. **Niemals** Nicht-`cascade_`- oder `directus_*`-Co
 
 ---
 
+## 6b. Der Live-Chat (Allgemein + Direktnachrichten)
+
+Echter Gruppen-Chat **plus** 1:1-DMs, persistent in `cascade_messages`, Echtzeit über
+**Server-Sent Events** (kein Directus-Realtime im Browser → Token bleibt serverseitig).
+
+- **Presence = live**, nicht persistent: ergibt sich aus den offenen SSE-Verbindungen im
+  Nitro-Prozess. `server/utils/chatHub.ts` ist ein **In-Memory-Singleton** (Registry der
+  Streams + Broadcast). Online ist, wer gerade einen Stream offen hat; Gäste zählen nicht.
+- **Routing:** `broadcastMessage` schickt Allgemein-Nachrichten an alle, DMs nur an die
+  Streams von Absender + Empfänger. DM-Verlauf = Nachrichten zwischen mir und dem Partner.
+- **Endpunkte:** `GET /api/chat/stream` (SSE; Snapshot `{ general, dms, online }` + Events
+  `message`/`presence`/`ping`), `POST /api/chat/messages` (`{ text, recipientId? }`, nur
+  eingeloggt), `GET /api/users/[id]` (Profil-Vorschau: begonnen/abgeschlossen je Kurs via
+  reiner `profileStatus.ts`).
+- **Client:** `useChat()` (EventSource) hält `general`/`dms`/`online`/`conversations`/
+  `unread`/`activeKey`; `ChatPanel` = Navigator (Allgemein · DMs · Online → Profil →
+  „Nachricht senden"), `ChatThread` = wiederverwendete Nachrichtenliste + Eingabe.
+- **Gäste** lesen den Allgemein-Chat read-only (Eingabe deaktiviert), keine DMs/Presence.
+- **Ungelesen-Badges** clientseitig (Reset bei Reload). **Grenze:** Presence/Broadcast
+  In-Memory → nur Single-Prozess-Deployment (`node .output/server/index.mjs`, `yarn dev`).
+- **Testen:** in **zwei Browsern** als testuser-1 und testuser-2 (beide `test1234`) einloggen
+  → Presence, Allgemein-Chat und DMs live.
+
+---
+
 ## 7. So läuft die App
 
 ```bash
 yarn install          # falls nötig
 yarn dev              # → http://localhost:3000   (Login: testuser-1 / test1234)
 yarn build            # Produktionsbuild (kompiliert alles inkl. Server-Routen)
-yarn test             # 10 Unit-Tests (Session + Checker)
+yarn test             # 22 Unit-Tests (Session, Checker, Profil-Status, Chat-Routing)
 ```
 
 **Directus-Daten pflegen (PowerShell!):**
@@ -173,6 +205,7 @@ powershell -File scripts/directus-schema.ps1        # idempotent (legt cascade_*
 powershell -File scripts/directus-seed.ps1          # WIPE + reseed ALLER cascade_*-Daten (alle 4 Kurse aus courses.json)
 powershell -File scripts/directus-add-courses.ps1   # NICHT-destruktiv: nur Flexbox/Grid/Animationen anlegen/aktualisieren
 powershell -File scripts/directus-sync-lessons.ps1  # NICHT-destruktiv: Lektions-Texte (CSS-Grundlagen) per sort patchen
+powershell -File scripts/directus-seed-progress-demo.ps1  # NICHT-destruktiv: testuser-1 Demo-Fortschritt (Chat-Profil)
 ```
 > Die `add-courses`/`sync-lessons`-Skripte sind idempotent und lassen Fortschritt
 > unangetastet — bevorzugt für gezielte Updates statt eines vollen Re-Seeds.
@@ -209,7 +242,9 @@ powershell -File scripts/directus-sync-lessons.ps1  # NICHT-destruktiv: Lektions
 - Checker inkl. Farb-Normalisierung + Cross-Browser-Shorthand-Fallback; PRÜFUNG verrät die
   Lösung nicht mehr; Lösung-Toggle; `lesen`-Lektionen ohne Check/Lösung.
 - Login/Logout/Gast + Auth-Gating; Fortschritt pro User bzw. lokal für Gäste.
-- `yarn build` grün · `yarn test` 10/10 grün.
+- **Live-Chat** (§6b): Allgemein + Direktnachrichten, echte Presence + Persistenz via SSE,
+  Profil-Vorschau mit Kursstatus — Runtime-Smoke (beide Test-User) bestanden.
+- `yarn build` grün · `yarn test` 22/22 grün.
 
 ## 10. Was ist NOCH OFFEN / bewusst weggelassen (YAGNI)
 
@@ -217,7 +252,8 @@ powershell -File scripts/directus-sync-lessons.ps1  # NICHT-destruktiv: Lektions
   Besonders die **neuen 45 Lektionen** (Flexbox/Grid/Animationen) sind logisch/gegen
   Chromium-Defaults entworfen, aber nicht live geklickt — vor Release durchspielen
   (v. a. `gap` → `"16px"` und `grid-template-columns` → `"120px 120px 120px"` gegenprüfen).
-- **Live-Chat ist statischer Mock** (keine Persistenz, kein Realtime). Senden hängt nur lokal an.
+- **Chat-Presence ist In-Memory** (Single-Prozess) und **Ungelesen-Status nicht persistent**
+  (Reset bei Reload) — bewusst. Mehrere Server-Instanzen bräuchten geteiltes Pub/Sub.
 - **Kein Passwort-Hashing, kein echtes Directus-Auth** (bewusst, Test-Setup). Vor echtem Einsatz: hashen.
 - Cookie `secure`-Flag ist nur in `production` aktiv. „vergessen?"/„Konto erstellen" sind nicht verdrahtet.
 - **Kein stufenweises Freischalten** — alle Kurse sofort aktiv (bewusst). `unlock_hint`/`status:locked`
@@ -227,7 +263,9 @@ powershell -File scripts/directus-sync-lessons.ps1  # NICHT-destruktiv: Lektions
 ### Sinnvolle nächste Schritte
 1. Alle Kurse im echten Browser durchklicken & ggf. einzelne Assertions feinjustieren.
 2. Optional: stufenweises Freischalten (Status serverseitig aus Fortschritt ableiten).
-3. Optional: echtes Auth + Passwort-Hashing, Chat persistent/realtime, „Konto erstellen"-Flow.
+3. Optional: echtes Auth + Passwort-Hashing, „Konto erstellen"-Flow.
+4. Optional Chat-Ausbau: persistenter Lese-/Ungelesen-Status, Presence über geteiltes
+   Pub/Sub (Multi-Instanz), Tippen-Indikator, Browser-Notifications.
 
 ---
 

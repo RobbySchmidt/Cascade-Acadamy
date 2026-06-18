@@ -122,12 +122,8 @@ useHead({ title: 'Profil · Cascade Academy' })
     <!-- LIVE-CHAT -->
     <div class="flex items-center justify-between" style="margin-top: 34px; margin-bottom: 14px">
       <h2 class="font-display font-bold text-text" style="font-size: 22px; letter-spacing: -0.3px">Live-Chat · wer ist online</h2>
-      <span class="flex items-center font-medium text-text-muted" style="gap: 7px; font-size: 14px">
-        <span class="inline-block rounded-full" style="width: 9px; height: 9px; background: #2BD68A" />
-        14 online
-      </span>
     </div>
 
-    <ChatPanel :me-initials="user?.avatar_initials || me?.user?.avatar_initials || 'MK'" />
+    <ChatPanel />
   </div>
 </template>

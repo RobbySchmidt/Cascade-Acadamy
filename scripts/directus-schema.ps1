@@ -57,6 +57,26 @@ function New-Collection {
   }
 }
 
+function New-Field {
+  # Adds a single field to an EXISTING collection (New-Collection skips existing
+  # collections, so newly-added fields need this). Idempotent.
+  param([string]$collection, $fieldObj)
+  $body = $fieldObj | ConvertTo-Json -Depth 10
+  try {
+    Invoke-RestMethod "$url/fields/$collection" -Method Post -Headers $h -Body $body | Out-Null
+    Write-Host "created field $collection.$($fieldObj.field)"
+  } catch {
+    $b = Get-ErrBody $_
+    if (Test-Exists $b $_) {
+      Write-Host "skip field $collection.$($fieldObj.field) (exists)"
+    } else {
+      Write-Host "ERROR creating field $collection.$($fieldObj.field)"
+      Write-Host $b
+      throw
+    }
+  }
+}
+
 function New-Relation {
   param([string]$child, [string]$field, [string]$parent)
   $body = @{
@@ -153,6 +173,19 @@ New-Collection 'cascade_progress' @(
   (TsField 'completed_at')
 )
 
+# --- cascade_messages (FK: user, recipient) — Live-Chat + DMs ---
+# recipient = null -> general chat; set -> direct message to that user.
+New-Collection 'cascade_messages' @(
+  (PK),
+  (FkField 'user'),
+  (FkField 'recipient'),
+  (TextField 'text' 'input-multiline'),
+  (TsField 'created_at')
+)
+
+# --- fields added to existing collections (no-op on fresh installs) ---
+New-Field 'cascade_messages' (FkField 'recipient')
+
 # --- relations (M2O) ---
 New-Relation 'cascade_chapters' 'course'  'cascade_courses'
 New-Relation 'cascade_lessons'  'chapter' 'cascade_chapters'
@@ -160,5 +193,7 @@ New-Relation 'cascade_lessons'  'course'  'cascade_courses'
 New-Relation 'cascade_progress' 'user'    'cascade_users'
 New-Relation 'cascade_progress' 'lesson'  'cascade_lessons'
 New-Relation 'cascade_progress' 'course'  'cascade_courses'
+New-Relation 'cascade_messages' 'user'      'cascade_users'
+New-Relation 'cascade_messages' 'recipient' 'cascade_users'
 
 Write-Host "schema done"
