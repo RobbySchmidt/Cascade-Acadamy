@@ -18,7 +18,9 @@ const myId = computed(() => (user.value ? String(user.value.id) : ''))
 
 onMounted(() => {
   if (!user.value && !isGuest.value) fetchMe().catch(() => {})
+  chat.openPanel()
 })
+onBeforeUnmount(() => chat.closePanel())
 
 // ----- active conversation -----
 const activeMessages = computed(() => chat.messagesFor(activeKey.value))
@@ -81,7 +83,7 @@ function onSend(text: string) {
 </script>
 
 <template>
-  <div class="flex overflow-hidden border border-border bg-surface" style="border-radius: 18px; min-height: 420px">
+  <div class="flex overflow-hidden border border-border bg-surface" style="border-radius: 18px; height: 560px">
     <!-- LEFT RAIL -->
     <aside class="flex shrink-0 flex-col overflow-y-auto border-r border-border p-[16px]" style="width: 262px">
       <!-- ===== profile preview ===== -->
@@ -224,7 +226,7 @@ function onSend(text: string) {
     </aside>
 
     <!-- RIGHT: active conversation -->
-    <div class="flex flex-1 flex-col" style="min-width: 0">
+    <div class="flex min-h-0 flex-1 flex-col" style="min-width: 0">
       <!-- conversation header -->
       <div class="flex items-center border-b border-border" style="gap: 9px; padding: 14px 20px">
         <span

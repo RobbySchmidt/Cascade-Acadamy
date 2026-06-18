@@ -30,7 +30,9 @@ Die Single Source of Truth des Designs ist `design_handoff_cascade_academy/Casca
 - **Spec (weitere Kurse):** [`docs/superpowers/specs/2026-06-18-weitere-kurse-design.md`](docs/superpowers/specs/2026-06-18-weitere-kurse-design.md)
 - **Spec (Live-Chat):** [`docs/superpowers/specs/2026-06-18-live-chat-design.md`](docs/superpowers/specs/2026-06-18-live-chat-design.md)
 - **Spec (private Chats):** [`docs/superpowers/specs/2026-06-18-private-chat-design.md`](docs/superpowers/specs/2026-06-18-private-chat-design.md)
+- **Spec (DM-Benachrichtigungen):** [`docs/superpowers/specs/2026-06-18-dm-benachrichtigungen-design.md`](docs/superpowers/specs/2026-06-18-dm-benachrichtigungen-design.md)
 - **Implementierungsplan:** [`docs/superpowers/plans/2026-06-17-cascade-academy.md`](docs/superpowers/plans/2026-06-17-cascade-academy.md)
+- **Plan (DM-Benachrichtigungen):** [`docs/superpowers/plans/2026-06-18-dm-benachrichtigungen.md`](docs/superpowers/plans/2026-06-18-dm-benachrichtigungen.md)
 
 ---
 
@@ -73,17 +75,21 @@ Browser  ──►  Nuxt Pages (app/pages)  ──►  eigene Nitro-API (server/
 .env                                  # DIRECTUS_URL, DIRECTUS_TOKEN, NUXT_SESSION_SECRET
 nuxt.config.ts                        # runtimeConfig + Google-Fonts-Head
 app/assets/css/main.css               # @theme Dark-Tokens + Page-Transition + cursor:pointer-Basisregel
-app/app.vue · app/layouts/            # default (mit Nav) · blank (Login)
+app/app.vue · app/layouts/            # default (Nav + app-weiter Chat-Connect/Disconnect + ChatToast) · blank (Login)
 app/middleware/auth.global.ts         # Auth-Gating
 app/composables/
   useAuth.ts                          # user-State, login/logout/fetchMe, isGuest
   useGuestProgress.ts                 # localStorage-Fortschritt für Gäste
-  useChat.ts                          # SSE-Chat: general/dms/online/conversations/unread, send()
+  useChat.ts                          # SSE-Chat-SINGLETON (useState): general/dms/online/conversations/
+                                      # unread, dmUnread (Badge), toasts (Queue), chatVisible/viewedKey,
+                                      # connect/disconnect, openPanel/closePanel, send()
 app/utils/
   checker.ts                          # Farb-Normalisierung + Assertion-Auswertung (getestet)
   chatRouting.ts                      # reine Konversations-Routing-Logik (getestet)
-app/components/                       # BrandLogo, AppNav, LightCircles, ProgressBar, CourseCard,
-                                      # LessonRow, StatTile, ChatPanel (Navigator), ChatThread
+  chatNotify.ts                       # reine shouldNotifyDm()-Benachrichtigungs-Entscheidung (getestet)
+app/components/                       # BrandLogo, AppNav (mit DM-Badge), LightCircles, ProgressBar,
+                                      # CourseCard, LessonRow, StatTile, ChatPanel (Navigator), ChatThread,
+                                      # ChatToast (globaler, klickbarer DM-Toast)
 app/components/lesson/                # CodeEditor, LivePreview, CheckPanel
 app/pages/
   index.vue                           # → redirect /kurse
@@ -96,7 +102,7 @@ scripts/                             # directus-schema.ps1, directus-seed.ps1 (g
                                       # directus-add-courses.ps1, directus-sync-lessons.ps1,
                                       # directus-seed-progress-demo.ps1, courses.json,
                                       # lessons.json (+ lessons-flexbox-layout / -css-grid / -animationen.json)
-test/                                # session, checker, profileStatus, chatRouting (22 Tests, grün)
+test/                                # session, checker, profileStatus, chatRouting, chatNotify (26 Tests, grün)
 ```
 
 ---
@@ -179,14 +185,33 @@ Echter Gruppen-Chat **plus** 1:1-DMs, persistent in `cascade_messages`, Echtzeit
   `message`/`presence`/`ping`), `POST /api/chat/messages` (`{ text, recipientId? }`, nur
   eingeloggt), `GET /api/users/[id]` (Profil-Vorschau: begonnen/abgeschlossen je Kurs via
   reiner `profileStatus.ts`).
-- **Client:** `useChat()` (EventSource) hält `general`/`dms`/`online`/`conversations`/
-  `unread`/`activeKey`; `ChatPanel` = Navigator (Allgemein · DMs · Online → Profil →
-  „Nachricht senden"), `ChatThread` = wiederverwendete Nachrichtenliste + Eingabe.
+- **Client:** `useChat()` ist ein **Singleton** (State via `useState`, **eine** modulweite
+  EventSource pro Tab). Hält `general`/`dms`/`online`/`conversations`/`unread`/`activeKey`
+  plus `dmUnread`, `toasts`, `chatVisible`/`viewedKey`. `ChatPanel` = Navigator (Allgemein ·
+  DMs · Online → Profil → „Nachricht senden"), `ChatThread` = wiederverwendete
+  Nachrichtenliste + Eingabe (festes 560px-Fenster, scrollt intern + auto nach unten).
+- **Verbindungs-Lebenszyklus liegt im default-Layout** (`onMounted(connect)`/
+  `onBeforeUnmount(disconnect)`), NICHT im Composable → die SSE-Verbindung bleibt über alle
+  Seiten offen (Login nutzt `blank` → dort keine Verbindung). Folge: man ist **online,
+  solange die App offen ist** (nicht nur auf der Chat-Seite).
 - **Gäste** lesen den Allgemein-Chat read-only (Eingabe deaktiviert), keine DMs/Presence.
 - **Ungelesen-Badges** clientseitig (Reset bei Reload). **Grenze:** Presence/Broadcast
   In-Memory → nur Single-Prozess-Deployment (`node .output/server/index.mjs`, `yarn dev`).
 - **Testen:** in **zwei Browsern** als testuser-1 und testuser-2 (beide `test1234`) einloggen
   → Presence, Allgemein-Chat und DMs live.
+
+### DM-Benachrichtigungen (Badge + Toast)
+- Bei einer eingehenden **DM auf einer beliebigen Seite**: Zähler-**Badge** am Profil-Link
+  (`AppNav`, `dmUnread` = Summe ungelesener DMs, General zählt **nicht**) **und** ein
+  klickbarer **Toast** (`ChatToast`, global im default-Layout, ~5 s Auto-Dismiss; Klick →
+  `/profil` + öffnet die DM).
+- Die Entscheidung „benachrichtigen?" ist die reine, getestete `shouldNotifyDm(msg, myId,
+  viewedKey)` in `app/utils/chatNotify.ts`: nur DMs an mich, nicht von mir, und **nicht das
+  gerade auf dem Bildschirm sichtbare** Gespräch.
+- **`viewedKey`** = `activeKey` nur wenn `chatVisible` (Panel gemountet, via `openPanel`/
+  `closePanel` in `ChatPanel`), sonst `''`. **Wichtig:** dadurch unterdrückt der persistente
+  `activeKey` Benachrichtigungen NICHT mehr auf anderen Seiten (war der „erst ging's, dann
+  nicht mehr"-Bug). Allgemein-Chat löst bewusst **kein** Badge/Toast aus.
 
 ---
 
@@ -196,7 +221,7 @@ Echter Gruppen-Chat **plus** 1:1-DMs, persistent in `cascade_messages`, Echtzeit
 yarn install          # falls nötig
 yarn dev              # → http://localhost:3000   (Login: testuser-1 / test1234)
 yarn build            # Produktionsbuild (kompiliert alles inkl. Server-Routen)
-yarn test             # 22 Unit-Tests (Session, Checker, Profil-Status, Chat-Routing)
+yarn test             # 26 Unit-Tests (Session, Checker, Profil-Status, Chat-Routing, Chat-Notify)
 ```
 
 **Directus-Daten pflegen (PowerShell!):**
@@ -244,7 +269,10 @@ powershell -File scripts/directus-seed-progress-demo.ps1  # NICHT-destruktiv: te
 - Login/Logout/Gast + Auth-Gating; Fortschritt pro User bzw. lokal für Gäste.
 - **Live-Chat** (§6b): Allgemein + Direktnachrichten, echte Presence + Persistenz via SSE,
   Profil-Vorschau mit Kursstatus — Runtime-Smoke (beide Test-User) bestanden.
-- `yarn build` grün · `yarn test` 22/22 grün.
+- **DM-Benachrichtigungen** (§6b): Badge am Profil-Icon + klickbarer Toast auf jeder Seite,
+  app-weite Chat-Verbindung über das default-Layout, festes/auto-scrollendes Chatfenster —
+  Runtime-Smoke (beide Test-User) bestanden.
+- `yarn build` grün · `yarn test` 26/26 grün.
 
 ## 10. Was ist NOCH OFFEN / bewusst weggelassen (YAGNI)
 

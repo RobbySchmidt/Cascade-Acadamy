@@ -45,8 +45,8 @@ onMounted(scrollToBottom)
 </script>
 
 <template>
-  <div class="flex flex-1 flex-col" style="min-width: 0">
-    <div ref="threadEl" class="flex flex-1 flex-col overflow-y-auto" style="gap: 12px; padding: 20px 24px">
+  <div class="flex min-h-0 flex-1 flex-col" style="min-width: 0">
+    <div ref="threadEl" class="flex min-h-0 flex-1 flex-col overflow-y-auto" style="gap: 12px; padding: 20px 24px">
       <div v-if="!messages.length" class="m-auto text-center font-medium text-text-faint" style="font-size: 13px">
         Noch keine Nachrichten.<br>Schreib die erste!
       </div>
